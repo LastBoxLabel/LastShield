@@ -135,11 +135,9 @@ public class JwtServiceTest {
         String token = "invalidToken";
         when(tokenStoreMock.findById(token)).thenReturn(Optional.empty());
 
-        TokenException exception = assertThrows(TokenException.class, () -> {
-            jwtService.getToken(token);
-        });
+        Optional<Token> retrievedToken = jwtService.getToken(token);
 
-        assertEquals("Invalid token.", exception.getMessage());
+        assertFalse(retrievedToken.isPresent());
     }
 
     @Test
