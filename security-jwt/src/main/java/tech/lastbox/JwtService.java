@@ -122,9 +122,11 @@ public class JwtService {
         }
 
         if (tokenStore != null) {
-            return tokenStore.findById(token)
-                    .filter(TokenUtil::isTokenValid)
-                    .map(TokenUtil::convertEntityToToken);
+            Optional<TokenEntity> tokenEntity = tokenStore.findById(token);
+            if (tokenEntity.isEmpty() || !TokenUtil.isTokenValid(tokenEntity.get())) {
+                throw new TokenException("Invalid token.");
+            }
+            return tokenEntity.map(TokenUtil::convertEntityToToken);
         }
         return validateDecodedToken(algorithm, issuer, token);
     }
