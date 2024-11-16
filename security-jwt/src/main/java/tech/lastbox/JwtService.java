@@ -110,10 +110,22 @@ public class JwtService {
 
     /**
      * Retrieves a token from the token store or decodes and validates it if not found in the store.
+     * <p>
+     * This method checks if the token exists in the configured token store. If the token is found, it
+     * will be validated (for example, ensuring it is not revoked or expired). If the token is valid, it
+     * is converted from a {@link TokenEntity} to a {@link Token} object. If the token is not found in the
+     * store or is invalid, a {@link TokenException} will be thrown.
+     * <p>
+     * If the token store is not configured, this method attempts to decode and validate the token using
+     * the JWT algorithm and issuer defined in the {@link JwtService} class.
      *
-     * @param token The token to retrieve and validate.
-     * @return An {@link Optional} containing the {@link Token} if valid, or empty if invalid.
-     * @throws TokenException If the token is null or empty.
+     * @param token The token to retrieve and validate. This should be a non-null, non-empty string.
+     *
+     * @return An {@link Optional} containing the {@link Token} if the token is valid, or an empty
+     *         {@link Optional} if the token is invalid or cannot be found.
+     *
+     * @throws TokenException If the token is null, empty, or invalid. This exception is also thrown
+     *         if the token is not found in the store and cannot be validated.
      */
     public Optional<Token> getToken(String token) {
         if (token == null || token.isEmpty()) {
