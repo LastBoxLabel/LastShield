@@ -2,6 +2,7 @@ package tech.lastbox;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.List;
 
 /**
  * Entity class representing a token in the system.
@@ -20,6 +21,9 @@ public class TokenEntity {
     private Instant issuedAt;
     private Instant expiresIn;
     private String subject;
+    private String issuer;
+    @ElementCollection
+    private List<String> scope;
     private boolean isRevoked;
 
     /**
@@ -36,11 +40,13 @@ public class TokenEntity {
      * @param expiresIn the expiration timestamp of the token.
      * @param subject the subject associated with the token.
      */
-    public TokenEntity(String token, Instant issuedAt, Instant expiresIn, String subject) {
+    public TokenEntity(String token, Instant issuedAt, Instant expiresIn, String subject, String issuer, List<String> scope) {
         this.token = token;
         this.issuedAt = issuedAt;
         this.expiresIn = expiresIn;
         this.subject = subject;
+        this.issuer = issuer;
+        this.scope = scope;
     }
 
     /**
@@ -95,5 +101,45 @@ public class TokenEntity {
      */
     public void setRevoked(boolean isRevoked) {
         this.isRevoked = isRevoked;
+    }
+
+    /**
+     * Retrieves the issuer of the token.
+     *
+     * @return The issuer (e.g., system or service that generated the token).
+     */
+    public String getIssuer() {
+        return issuer;
+    }
+
+    /**
+     * Retrieves the scope associated with the token.
+     * <p>
+     * The scope defines the permissions or roles that the token grants to the subject.
+     *
+     * @return A list of scope strings.
+     */
+    public List<String> getScope() {
+        return scope;
+    }
+
+    /**
+     * Checks if the token is expired.
+     * A token is considered expired if its expiration time is null or before the current time.
+     *
+     * @return true if the token is expired, false otherwise.
+     */
+    public boolean isExpired() {
+        return expiresIn == null || expiresIn.isBefore(Instant.now());
+    }
+
+    /**
+     * Checks if the token is valid.
+     * A token is valid if it is neither expired nor revoked.
+     *
+     * @return true if the token is valid, false otherwise.
+     */
+    public boolean isValid() {
+        return !isExpired() && !isRevoked;
     }
 }

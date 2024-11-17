@@ -18,11 +18,14 @@ package tech.lastbox;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import static tech.lastbox.DateUtil.*;
@@ -35,38 +38,50 @@ import static tech.lastbox.TokenUtil.*;
 public class JwtService {
     private final Algorithm algorithm;
     private final ExpirationTimeUnit expirationTimeUnit;
-    private final String issuer;
+    private final HashSet<String> trustedIssuers;
     private final long expirationAmount;
     private final TokenStore tokenStore;
     private final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
     /**
-     * Constructs a JwtService instance with the provided JWT configuration.
+     * Constructs a new {@code JwtService} instance with the provided configuration.
      *
-     * @param jwtConfig The configuration object that contains JWT settings.
+     * @param jwtConfig the JWT configuration object containing algorithm, secret key, issuers, and expiration settings
      */
     public JwtService(JwtConfig jwtConfig) {
         this.algorithm = jwtConfig.getJwtAlgorithm().getAlgorithm(jwtConfig.getSecretKey());
-        this.issuer = jwtConfig.getIssuer();
+        this.trustedIssuers = jwtConfig.getTrustedIssuers();
         this.expirationTimeUnit = jwtConfig.getExpirationTimeUnit();
         this.expirationAmount = jwtConfig.getExpirationAmount();
         this.tokenStore = jwtConfig.getTokenStore();
     }
 
     /**
-     * Generates a new JWT for a given subject.
-     * The token is created with an expiration time and issuer.
-     * If a token store is provided, the token is also saved.
+     * Generates a JWT for the specified subject with a given issuer and scope.
      *
-     * @param subject The subject (typically the user) for whom the token is generated.
-     * @return A {@link Token} object containing the generated token details.
-     * @throws TokenCreationException If the subject is null or empty.
+     * <p>The token includes claims for expiration, issued time, issuer, and scope. It is saved
+     * in the configured token store if available.
+     *
+     * @param subject the subject (e.g., user identifier) for whom the token is generated
+     * @param issuer the trusted issuer of the token
+     * @param scope the list of permissions or roles associated with the token
+     * @return a {@link Token} object containing the generated token and its metadata
+     * @throws TokenCreationException if the subject, issuer, or scope is invalid
      */
     @Transactional
-    public Token generateToken(String subject) {
+    public Token generateToken(String subject, String issuer, List<String> scope) {
         if (subject == null || subject.isEmpty()) {
             throw new TokenCreationException("Subject must not be null or empty.");
         }
+
+        if (scope == null || scope.isEmpty()) {
+            throw new TokenCreationException("Scope must not be null or empty.");
+        }
+
+        if (!trustedIssuers.contains(issuer)) {
+            throw new TokenCreationException("Issuer must be in issuers trusted list.");
+        }
+
         Instant now = Instant.now();
         Instant expiresIn = DateUtil.getExpirationDate(now, expirationAmount, expirationTimeUnit);
 
@@ -75,22 +90,24 @@ public class JwtService {
                 .withExpiresAt(expiresIn)
                 .withIssuedAt(now)
                 .withIssuer(issuer)
+                .withClaim("scope", scope)
                 .sign(algorithm);
 
         if (tokenStore != null) {
-            TokenEntity tokenEntity = new TokenEntity(token, now, expiresIn, subject);
+            TokenEntity tokenEntity = new TokenEntity(token, now, expiresIn, subject, issuer, scope);
             tokenStore.save(tokenEntity);
         }
         logger.info("Generating token with subject: {}", subject);
-        return new Token(token, subject, instantToLocalDateTime(now), instantToLocalDateTime(expiresIn), false);
+        return new Token(token, subject, instantToLocalDateTime(now), instantToLocalDateTime(expiresIn), issuer, scope, false);
     }
 
     /**
-     * Revokes an existing token by marking it as revoked in the token store.
-     * If the token does not exist in the repository, an exception is thrown.
+     * Revokes the specified token, marking it as invalid in the token store.
      *
-     * @param token The token to revoke.
-     * @throws TokenRevocationException If the token is not found in the repository or cannot be revoked.
+     * <p>If the token does not exist in the store or the store is not configured, an exception is thrown.
+     *
+     * @param token the token to revoke
+     * @throws TokenRevocationException if the token cannot be revoked or is not found
      */
     @Transactional
     public void revokeToken(String token) {
@@ -114,10 +131,13 @@ public class JwtService {
     }
 
     /**
-     * Validates a token by checking its existence and validity.
+     * Retrieves and validates a token either from the token store or by decoding it directly.
      *
-     * @param token The token to validate.
-     * @return A {@link TokenValidation} object containing the validation result.
+     * <p>If a token store is configured, the token is fetched and validated from the store.
+     * Otherwise, the token is decoded and validated using the configured algorithm and issuer list.
+     *
+     * @param token the token to retrieve and validate
+     * @return an {@link Optional} containing the valid {@link Token}, or an empty {@link Optional} if invalid or not found
      */
     public TokenValidation validateToken(String token) {
         Optional<Token> tokenOptional = getToken(token);
@@ -142,12 +162,12 @@ public class JwtService {
 
         if (tokenStore != null) {
             Optional<TokenEntity> tokenEntity = tokenStore.findById(token);
-            if (tokenEntity.isEmpty() || !TokenUtil.isTokenValid(tokenEntity.get())) {
+            if (tokenEntity.isEmpty() || !tokenEntity.get().isValid()) {
                 return Optional.empty();
             }
             return tokenEntity.map(TokenUtil::convertEntityToToken);
         }
 
-        return validateDecodedToken(algorithm, issuer, token);
+        return validateDecodedToken(algorithm, trustedIssuers, token);
     }
 }
