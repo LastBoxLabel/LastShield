@@ -110,7 +110,7 @@ public class JwtConfig {
      *
      * @return The token store, or null if not configured.
      */
-    public TokenStore getTokenRepository() {
+    public TokenStore getTokenStore() {
         return tokenStore;
     }
 }

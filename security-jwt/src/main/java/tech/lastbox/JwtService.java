@@ -4,6 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -34,7 +36,7 @@ public class JwtService {
         this.issuer = jwtConfig.getIssuer();
         this.expirationTimeUnit = jwtConfig.getExpirationTimeUnit();
         this.expirationAmount = jwtConfig.getExpirationAmount();
-        this.tokenStore = jwtConfig.getTokenRepository();
+        this.tokenStore = jwtConfig.getTokenStore();
     }
 
     /**
