@@ -13,6 +13,7 @@ import java.util.List;
  * for persistence and retrieval of token data.
  */
 @Entity
+@Table(name = "jwt_tokens")
 public class TokenEntity {
 
     @Id
