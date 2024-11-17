@@ -94,8 +94,8 @@ public class JwtService {
                 throw new TokenRevocationException("Token not found in the repository.");
             });
         } else {
-            logger.error("Cannot revoke token without a configured repository.");
-            throw new TokenRevocationException("Token repository not configured.");
+            logger.error("Cannot revoke token without a configured store.");
+            throw new TokenRevocationException("Token Store not configured.");
         }
     }
 
