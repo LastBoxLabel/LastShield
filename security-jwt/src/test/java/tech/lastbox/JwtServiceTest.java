@@ -35,6 +35,7 @@ public class JwtServiceTest {
 
         jwtService = new JwtService(jwtConfig);
     }
+
     @Test
     public void testGenerateToken_Success() {
         TokenEntity tokenEntity = new TokenEntity("token", Instant.now(), Instant.now().plusSeconds(3600), subject);
