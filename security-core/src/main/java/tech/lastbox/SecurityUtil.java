@@ -49,7 +49,7 @@ public class SecurityUtil {
                 }
             }
         } catch (Exception e) {
-            // Log exception
+            e.printStackTrace();
         }
         return classes;
     }
