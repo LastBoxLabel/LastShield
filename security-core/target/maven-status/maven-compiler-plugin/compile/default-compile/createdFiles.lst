@@ -1,0 +1,8 @@
+tech\lastbox\CustomUserDetailsService.class
+tech\lastbox\annotations\Password.class
+tech\lastbox\CorsConfig.class
+tech\lastbox\SecurityUtil.class
+tech\lastbox\SecurityFilter.class
+tech\lastbox\CoreSecurityConfig.class
+tech\lastbox\annotations\Username.class
+tech\lastbox\annotations\UserServiceImplementation.class
