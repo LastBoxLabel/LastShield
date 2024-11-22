@@ -18,8 +18,8 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>
@@ -36,12 +36,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>tech.lastbox</groupId>
-            <artifactId>security-oauth</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.10.2</version>
@@ -50,5 +44,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.2.0</version>
+        </dependency>
+
     </dependencies>
 </project>

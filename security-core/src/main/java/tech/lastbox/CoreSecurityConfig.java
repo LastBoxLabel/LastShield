@@ -25,7 +25,6 @@ public class CoreSecurityConfig {
     private final CorsConfig corsConfig;
     private String jwtSecretKey;
     private long jwtExpiration;
-    private final HashSet<Providers> providers = new HashSet<>();
     private boolean csrfProtection = true;
     private final HashMap<String, GrantedAuthority> authorities = new HashMap<>();
     private final SecurityFilter securityFilter;
@@ -67,16 +66,11 @@ public class CoreSecurityConfig {
         this.authorities.putAll(authorities);
     }
 
-
-    public void addProviders(Providers provider) {
-        providers.add(provider);
-    }
-
     public void setCsrfProtection(boolean csrfProtection) {
         this.csrfProtection = csrfProtection;
     }
 
-    public synchronized void  isCalled() {
+    public synchronized void isCalled() {
         this.isCalled = true;
     }
 }

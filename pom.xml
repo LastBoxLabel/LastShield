@@ -10,9 +10,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>security-core</module>
-        <module>security-oauth</module>
         <module>security-jwt</module>
         <module>security-config</module>
+        <module>BasicAuth</module>
     </modules>
 
     <dependencyManagement>

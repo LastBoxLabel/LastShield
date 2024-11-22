@@ -36,11 +36,6 @@ public class SecurityConfig {
         return this;
     }
 
-    public SecurityConfig addProvider(Providers provider) {
-        coreSecurityConfig.addProviders(provider);
-        return this;
-    }
-
     public SecurityConfig setCsrfProtection(boolean csrfProtection) {
         coreSecurityConfig.setCsrfProtection(csrfProtection);
         return this;
