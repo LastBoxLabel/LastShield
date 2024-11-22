@@ -40,7 +40,7 @@ public class CoreSecurityConfig {
     }
 
     void setAdvancedFilter() {
-        AdvancedFilterChecker.setAdvancedFiltered(!authorities.isEmpty());
+        AdvancedFilterChecker.setAdvancedFiltered(true);
     }
 
 
@@ -59,7 +59,6 @@ public class CoreSecurityConfig {
                         authorize.requestMatchers("/**").permitAll();
                     } else {
                         authorities.forEach((authority) -> {
-                            System.out.println(authority);
                             authorize.requestMatchers(authority.getPath()).hasAnyRole(authority.getRoles());
                         });
                         authorize.anyRequest().authenticated();
@@ -74,8 +73,11 @@ public class CoreSecurityConfig {
 
     public void addAuthority(RouteAuthority routeAuthority) {
         this.authorities.add(routeAuthority);
-        setAdvancedFilter();
-        securityFilter.setUserService(securityUtil.getUserServiceInstance());
+        if (!AdvancedFilterChecker.isAdvancedFiltered()) {
+            setAdvancedFilter();
+            securityFilter.setUserService(securityUtil.getUserServiceInstance());
+        }
+
     }
 
     public void setCsrfProtection(boolean csrfProtection) {
