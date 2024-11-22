@@ -8,8 +8,8 @@ import java.util.List;
 
 @Component
 public class SecurityConfig {
-    private CorsConfig corsConfig;
-    private CoreSecurityConfig coreSecurityConfig;
+    private final CorsConfig corsConfig;
+    private final CoreSecurityConfig coreSecurityConfig;
 
     public SecurityConfig(CoreSecurityConfig coreSecurityConfig, CorsConfig corsConfig) {
         this.coreSecurityConfig = coreSecurityConfig;

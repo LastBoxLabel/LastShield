@@ -1,6 +1,7 @@
 package tech.lastbox;
 
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,11 @@ public class CoreSecurityConfig {
         this.corsConfig = corsConfig;
     }
 
+    @PostConstruct
+    void setAdvancedFilter() {
+        AdvancedFilterChecker.setAdvancedFiltered(isFiltered());
+    }
+
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         if (!isCalled) {
@@ -42,15 +48,16 @@ public class CoreSecurityConfig {
                 .csrf(csrf -> {
                     if (!csrfProtection) csrf.disable();
                 })
-                .authorizeRequests(authorize -> {
+                .authorizeHttpRequests(authorize -> {
                     if (authorities.isEmpty()) {
                         authorize.requestMatchers("/**").permitAll();
+                    } else {
+                        authorities.forEach((route, authority) -> {
+
+                            authorize.requestMatchers(route).hasRole(authority.getAuthority());
+                        });
+                        authorize.anyRequest().authenticated();
                     }
-                    authorities.forEach((route, authority) -> {
-                        ;
-                        authorize.requestMatchers("/" + route + "/**").hasRole(authority.getAuthority());
-                    });
-                    authorize.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
 
@@ -58,6 +65,10 @@ public class CoreSecurityConfig {
 
     public void configureJwt(JwtConfig jwtConfig) {
         securityFilter.configureJwtService(jwtConfig);
+    }
+
+    private boolean isFiltered() {
+        return !authorities.isEmpty();
     }
 
     public void addAuthority(HashMap<String, SimpleGrantedAuthority> authorities) {

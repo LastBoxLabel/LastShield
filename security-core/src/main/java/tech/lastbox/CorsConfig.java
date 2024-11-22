@@ -1,5 +1,7 @@
 package tech.lastbox;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -14,10 +16,11 @@ public class CorsConfig {
     private List<String> allowedMethods;
     private List<String> allowedHeaders;
     private Boolean allowCredentials;
+    private Logger logger = LoggerFactory.getLogger(CorsConfig.class);
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        System.out.println("✅ CORS Configuration Initialized");
+        logger.info("✅ CORS Configuration Initialized");
         CorsConfiguration configuration = new CorsConfiguration();
 
         if(allowedOrigins == null) configuration.setAllowedOrigins(List.of("*"));
