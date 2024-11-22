@@ -15,9 +15,8 @@ public class SecurityInitializer {
         securityConfig.corsAllowCredentials(true)
                 .corsAllowedMethods(List.of("GET"))
                 .corsAllowedOrigins(List.of("*"))
-                .addRouteAuthority(new HashMap<String, SimpleGrantedAuthority>() {{
-                    put("/**", new SimpleGrantedAuthority("QUANDO EU QUISER"));
-                }})
+                .addRouteAuthority("/user", "USER")
+                .addRouteAuthority("/admin", List.of("USER", "ADMIN"))
                 .configureJwtService(new JwtConfig(JwtAlgorithm.HMAC256,
                         "pindamonhangaba",
                         "user",

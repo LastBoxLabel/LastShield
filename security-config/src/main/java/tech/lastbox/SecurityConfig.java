@@ -1,9 +1,8 @@
 package tech.lastbox;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -41,9 +40,13 @@ public class SecurityConfig {
         return this;
     }
 
-    public SecurityConfig addRouteAuthority(HashMap<String, SimpleGrantedAuthority> authorities){
-        coreSecurityConfig.addAuthority(authorities);
-        System.out.println("teoricamente adicionou" + authorities);
+    public SecurityConfig addRouteAuthority(String path, String role){
+        coreSecurityConfig.addAuthority(new RouteAuthority(path, role));
+        return this;
+    }
+
+    public SecurityConfig addRouteAuthority(String path, List<String> roles){
+        coreSecurityConfig.addAuthority(new RouteAuthority(path, roles));
         return this;
     }
 

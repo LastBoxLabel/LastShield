@@ -16,7 +16,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Configuration
 @ComponentScan
@@ -28,7 +30,7 @@ public class CoreSecurityConfig {
     private long jwtExpiration;
     private final SecurityUtil securityUtil;
     private boolean csrfProtection = true;
-    private final HashMap<String, GrantedAuthority> authorities = new HashMap<>();
+    private final List<RouteAuthority> authorities = new ArrayList<>();
     private final SecurityFilter securityFilter;
 
     public CoreSecurityConfig(CorsConfig corsConfig, SecurityUtil securityUtil, SecurityFilter securityFilter) {
@@ -56,8 +58,9 @@ public class CoreSecurityConfig {
                     if (authorities.isEmpty()) {
                         authorize.requestMatchers("/**").permitAll();
                     } else {
-                        authorities.forEach((route, authority) -> {
-                            authorize.requestMatchers(route).hasRole(authority.getAuthority());
+                        authorities.forEach((authority) -> {
+                            System.out.println(authority);
+                            authorize.requestMatchers(authority.getPath()).hasAnyRole(authority.getRoles());
                         });
                         authorize.anyRequest().authenticated();
                     }
@@ -69,8 +72,8 @@ public class CoreSecurityConfig {
         JwtServiceConfig.configureJwtService(jwtConfig);
     }
 
-    public void addAuthority(HashMap<String, SimpleGrantedAuthority> authorities) {
-        this.authorities.putAll(authorities);
+    public void addAuthority(RouteAuthority routeAuthority) {
+        this.authorities.add(routeAuthority);
         setAdvancedFilter();
         securityFilter.setUserService(securityUtil.getUserServiceInstance());
     }
