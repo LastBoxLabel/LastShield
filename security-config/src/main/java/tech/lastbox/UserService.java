@@ -1,6 +1,6 @@
 package tech.lastbox;
 
-import tech.lastbox.annotations.UserServiceImplementation;
+import tech.lastbox.annotations.UserHandler;
 
-@UserServiceImplementation
+@UserHandler
 public class UserService {}

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import tech.lastbox.annotations.UserServiceImplementation;
+import tech.lastbox.annotations.UserHandler;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -25,7 +25,7 @@ public class SecurityUtil {
 
             for (ClassLoader cl = classLoader; cl != null; cl = cl.getParent()) {
                 for (Class<?> cls : getAllClassesFromClassLoader(cl)) {
-                    if (cls.isAnnotationPresent(UserServiceImplementation.class)) {
+                    if (cls.isAnnotationPresent(UserHandler.class)) {
                         try {
                             return cls.getDeclaredConstructor().newInstance();
                         } catch (Exception e) {
@@ -35,7 +35,7 @@ public class SecurityUtil {
                 }
             }
 
-            throw new RuntimeException("No UserServiceImplementation found");
+            throw new RuntimeException("No UserHandler found");
         } else {
             return new Object();
         }
