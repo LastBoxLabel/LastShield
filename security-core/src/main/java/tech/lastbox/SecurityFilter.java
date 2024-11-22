@@ -24,32 +24,36 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final JwtService jwtService = JwtServiceConfig.getJwtService();
     private Object userService;
     private final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
+    private final SecurityUtil securityUtil;
+
+    public SecurityFilter(SecurityUtil securityUtil) {
+        this.securityUtil = securityUtil;
+    }
 
     public void setUserService(Object userService) {
         this.userService = userService;
     }
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         if (AdvancedFilterChecker.isAdvancedFiltered()) {
-            var token = this.recoverToken(request);
+            var authorization = this.recoverToken(request);
 
-
-            if (token == null || token.isEmpty()) throw new RuntimeException("Token is empty");
+            if (authorization == null || authorization.isEmpty()) throw new RuntimeException("Token is empty");
             if (jwtService == null) throw new RuntimeException("JwtService not configured");
+            var tokenValidation = jwtService.validateToken(authorization);
 
-            var login = jwtService.validateToken(token).tokenOptional();
-            if (login.isPresent()) {
+            var tokenOptional = tokenValidation.tokenOptional();
+            if (tokenOptional.isPresent() && tokenValidation.isValid()) {
                 try {
-                    Method method = userService.getClass().getDeclaredMethod("getUserByUsername", String.class);
-                    Object userEntity = method.invoke(userService, login.get().subject());
-                    var authorities = Collections.singletonList(new SimpleGrantedAuthority(userEntity.getClass().getDeclaredField("role").get(userEntity).toString()));
+                    var token = tokenOptional.get();
+                    Object userEntity = securityUtil.findUserByUsername(userService, token.subject());
+                    var authorities = securityUtil.getUserAuthorities(userEntity);
                     var authentication = new UsernamePasswordAuthenticationToken(userEntity, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                } catch (NoSuchMethodException | NoSuchFieldException | IllegalAccessException |
-                         InvocationTargetException e) {
+                } catch (RuntimeException e) {
                     logger.error("Error while authenticating: {}", e, e);
+                    throw e;
                 }
             }
         }

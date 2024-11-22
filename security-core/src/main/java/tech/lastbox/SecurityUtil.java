@@ -2,12 +2,17 @@ package tech.lastbox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import tech.lastbox.annotations.UserServiceImplementation;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -33,6 +38,22 @@ public class SecurityUtil {
             throw new RuntimeException("No UserServiceImplementation found");
         } else {
             return new Object();
+        }
+    }
+
+    public List<GrantedAuthority> getUserAuthorities(Object user) {
+        return convertRolesToAuthorities(getUserRoles(user));
+    }
+
+    public Object findUserByUsername(Object userService,  String username) {
+        try {
+            Method method = userService.getClass().getDeclaredMethod("getUserByUsername", String.class);
+            method.setAccessible(true);
+            return method.invoke(userService, username);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("The method 'getUserByUsername' was not found in the provided class.", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error invoking 'getUserByUsername' on the provided class.", e);
         }
     }
 
@@ -74,6 +95,49 @@ public class SecurityUtil {
             }
         }
         return classes;
+    }
+
+    @SuppressWarnings("unchecked")
+    private  <T> T getFieldValue(Object object, String fieldName) {
+        try {
+            Field field = object.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            Object value = field.get(object);
+            return (T) field.get(object);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Error accessing the field '" + fieldName + "' in "
+                    + object.getClass().getName(), e);
+        } catch (ClassCastException e) {
+            throw new RuntimeException("The field '" + fieldName + "' is not of the expected type.", e);
+        }
+    }
+
+    private List<String> getUserRoles(Object user) {
+        try {
+            return getFieldValue(user, "roles");
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof NoSuchFieldException) {
+                try {
+                    String singleRole = getFieldValue(user, "role");
+                    return List.of(singleRole);
+                } catch (RuntimeException ex) {
+                    throw new RuntimeException("Failed to retrieve roles or role field", ex);
+                }
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private List<GrantedAuthority> convertRolesToAuthorities(List<String> roles) {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(treatRole(role)))
+                .collect(Collectors.toList());
+    }
+
+    private String treatRole(String role) {
+        if (role.startsWith("ROLE_")) return role;
+        else return String.format("ROLE_%s", role);
     }
 }
 
