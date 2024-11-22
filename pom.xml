@@ -12,7 +12,6 @@
         <module>security-core</module>
         <module>security-jwt</module>
         <module>security-config</module>
-        <module>BasicAuth</module>
     </modules>
 
     <dependencyManagement>
