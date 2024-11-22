@@ -2,10 +2,12 @@ package tech.lastbox;
 
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,19 +26,21 @@ public class CoreSecurityConfig {
     private final CorsConfig corsConfig;
     private String jwtSecretKey;
     private long jwtExpiration;
+    private final SecurityUtil securityUtil;
     private boolean csrfProtection = true;
     private final HashMap<String, GrantedAuthority> authorities = new HashMap<>();
     private final SecurityFilter securityFilter;
 
-    public CoreSecurityConfig(SecurityFilter securityFilter, CorsConfig corsConfig) {
-        this.securityFilter = securityFilter;
+    public CoreSecurityConfig(CorsConfig corsConfig, SecurityUtil securityUtil, SecurityFilter securityFilter) {
         this.corsConfig = corsConfig;
+        this.securityUtil = securityUtil;
+        this.securityFilter = securityFilter;
     }
 
-    @PostConstruct
     void setAdvancedFilter() {
-        AdvancedFilterChecker.setAdvancedFiltered(isFiltered());
+        AdvancedFilterChecker.setAdvancedFiltered(!authorities.isEmpty());
     }
+
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -53,26 +57,22 @@ public class CoreSecurityConfig {
                         authorize.requestMatchers("/**").permitAll();
                     } else {
                         authorities.forEach((route, authority) -> {
-
                             authorize.requestMatchers(route).hasRole(authority.getAuthority());
                         });
                         authorize.anyRequest().authenticated();
                     }
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
-
     }
 
     public void configureJwt(JwtConfig jwtConfig) {
-        securityFilter.configureJwtService(jwtConfig);
-    }
-
-    private boolean isFiltered() {
-        return !authorities.isEmpty();
+        JwtServiceConfig.configureJwtService(jwtConfig);
     }
 
     public void addAuthority(HashMap<String, SimpleGrantedAuthority> authorities) {
         this.authorities.putAll(authorities);
+        setAdvancedFilter();
+        securityUtil.getUserServiceInstance();
     }
 
     public void setCsrfProtection(boolean csrfProtection) {

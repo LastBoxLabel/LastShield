@@ -1,8 +1,7 @@
 package tech.lastbox;
 
-
-import org.springframework.context.ApplicationContext;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import tech.lastbox.annotations.UserServiceImplementation;
 
@@ -11,31 +10,30 @@ import java.net.URL;
 import java.util.*;
 
 
-
 @Component
 public class SecurityUtil {
-    private final ApplicationContext applicationContext;
-
-    public SecurityUtil(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
+    private final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
 
     public Object getUserServiceInstance() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (AdvancedFilterChecker.isAdvancedFiltered()) {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-        for (ClassLoader cl = classLoader; cl != null; cl = cl.getParent()) {
-            for (Class<?> cls : getAllClassesFromClassLoader(cl)) {
-                if (cls.isAnnotationPresent(UserServiceImplementation.class)) {
-                    try {
-                        return cls.getDeclaredConstructor().newInstance();
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error instantiating UserService", e);
+            for (ClassLoader cl = classLoader; cl != null; cl = cl.getParent()) {
+                for (Class<?> cls : getAllClassesFromClassLoader(cl)) {
+                    if (cls.isAnnotationPresent(UserServiceImplementation.class)) {
+                        try {
+                            return cls.getDeclaredConstructor().newInstance();
+                        } catch (Exception e) {
+                            throw new RuntimeException("Error instantiating UserService", e);
+                        }
                     }
                 }
             }
-        }
 
-        throw new RuntimeException("No UserServiceImplementation found");
+            throw new RuntimeException("No UserServiceImplementation found");
+        } else {
+            return new Object();
+        }
     }
 
     private List<Class<?>> getAllClassesFromClassLoader(ClassLoader classLoader) {
@@ -49,7 +47,7 @@ public class SecurityUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error: {}", e, e);
         }
         return classes;
     }
@@ -70,7 +68,7 @@ public class SecurityUtil {
                     try {
                         classes.add(Class.forName(className));
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.error("Error: {}", e, e);
                     }
                 }
             }

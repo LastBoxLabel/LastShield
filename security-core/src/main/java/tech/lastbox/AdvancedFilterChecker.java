@@ -1,7 +1,9 @@
 package tech.lastbox;
 
 class AdvancedFilterChecker {
+
     private static boolean isAdvancedFiltered;
+
     public static boolean isAdvancedFiltered() {
         return isAdvancedFiltered;
     }
