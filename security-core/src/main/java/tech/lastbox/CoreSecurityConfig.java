@@ -72,7 +72,7 @@ public class CoreSecurityConfig {
     public void addAuthority(HashMap<String, SimpleGrantedAuthority> authorities) {
         this.authorities.putAll(authorities);
         setAdvancedFilter();
-        securityUtil.getUserServiceInstance();
+        securityFilter.setUserService(securityUtil.getUserServiceInstance());
     }
 
     public void setCsrfProtection(boolean csrfProtection) {

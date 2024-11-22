@@ -22,11 +22,15 @@ import java.util.Collections;
 @EnableWebSecurity
 public class SecurityFilter extends OncePerRequestFilter {
     private final JwtService jwtService = JwtServiceConfig.getJwtService();
-    private final Object userService;
+    private Object userService;
     private final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
     public SecurityFilter(SecurityUtil securityUtil) throws Exception {
         this.userService = securityUtil.getUserServiceInstance();
+    }
+
+    public void setUserService(Object userService) {
+        this.userService = userService;
     }
 
 
