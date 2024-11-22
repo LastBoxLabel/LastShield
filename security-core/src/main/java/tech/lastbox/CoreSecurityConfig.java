@@ -14,8 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashMap;
-import java.util.HashSet;
-
 
 @Configuration
 @ComponentScan
@@ -29,7 +27,7 @@ public class CoreSecurityConfig {
     private final HashMap<String, GrantedAuthority> authorities = new HashMap<>();
     private final SecurityFilter securityFilter;
 
-    public CoreSecurityConfig(CustomUserDetailsService customUserDetailsService, SecurityFilter securityFilter, CorsConfig corsConfig) {
+    public CoreSecurityConfig(SecurityFilter securityFilter, CorsConfig corsConfig) {
         this.securityFilter = securityFilter;
         this.corsConfig = corsConfig;
     }
