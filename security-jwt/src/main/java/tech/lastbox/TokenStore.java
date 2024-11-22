@@ -4,7 +4,7 @@ import java.util.Optional;
 
 /**
  * Interface for storing and retrieving token entities.
- * This interface defines methods for saving and finding token entities in the token store.
+ * This interface defines http for saving and finding token entities in the token store.
  * It allows interaction with a storage system (e.g., a database) for token management.
  * <p>
  * Implementing classes should provide the logic for persisting and querying token entities
