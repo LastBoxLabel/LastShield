@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import tech.lastbox.*;
 import tech.lastbox.basicauth.enviroment.BasicAuthProperties;
 import tech.lastbox.basicauth.repository.TokenRepository;
+import tech.lastbox.security.SecurityConfig;
 
 import java.util.List;
 

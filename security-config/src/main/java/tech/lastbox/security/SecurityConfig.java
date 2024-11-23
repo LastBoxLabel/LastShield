@@ -1,6 +1,9 @@
-package tech.lastbox;
+package tech.lastbox.security;
 
 import org.springframework.stereotype.Component;
+import tech.lastbox.CoreSecurityConfig;
+import tech.lastbox.CorsConfig;
+import tech.lastbox.RouteAuthority;
 import tech.lastbox.http.HttpMethod;
 
 import java.util.HashSet;
