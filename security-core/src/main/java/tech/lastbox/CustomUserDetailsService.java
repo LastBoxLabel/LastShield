@@ -1,5 +1,6 @@
 package tech.lastbox;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,24 +12,32 @@ import tech.lastbox.annotations.Password;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final SecurityUtil securityUtil;
+    private final ApplicationContext applicationContext;
+    private Object userRepository;
 
-    public CustomUserDetailsService(SecurityUtil securityUtil) {
+    public CustomUserDetailsService(SecurityUtil securityUtil, ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
         this.securityUtil = securityUtil;
     }
 
+    private void setUserRepository() {
+        this.userRepository = applicationContext.getBean(securityUtil.getUserRepositoryClass());
+    }
+
     @Override
+    @SuppressWarnings("unchecked")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            Object userService = securityUtil.getUserServiceInstance();
-            Method getUserByUsername = userService.getClass()
-                    .getDeclaredMethod("getUserByUsername", String.class);
+            if (this.userRepository == null) setUserRepository();
 
-            getUserByUsername.setAccessible(true);
-            Object userEntity = getUserByUsername.invoke(userService, username);
+            Optional<Object> userEntityOptional = (Optional<Object>) securityUtil.findUserByUsername(userRepository, username);
+            if (userEntityOptional.isEmpty()) throw new RuntimeException("User not found.");
+            Object userEntity = userEntityOptional.get();
             String password = Arrays.stream(userEntity.getClass().getDeclaredFields())
                     .filter(field -> field.isAnnotationPresent(Password.class))
                     .map(field -> {

@@ -11,6 +11,11 @@ public class RouteAuthority {
     private final String[] roles;
     private final List<HttpMethod> httpMethods = new ArrayList<>();
 
+    public RouteAuthority(String path) {
+        this.path = path;
+        this.roles = null;
+    }
+
     public RouteAuthority(String path, String role) {
         this.path = path;
         this.roles = new String[] {role};
@@ -25,6 +30,12 @@ public class RouteAuthority {
     public RouteAuthority(String path, List<String> roles) {
         this.path = path;
         this.roles = roles.toArray(roles.toArray(new String[0]));
+    }
+
+    public RouteAuthority(String path, HttpMethod... httpMethods) {
+        this.path = path;
+        this.roles = null;
+        this.httpMethods.addAll(Arrays.asList(httpMethods));
     }
 
     public String getPath() {
@@ -42,6 +53,7 @@ public class RouteAuthority {
         return "RouteAuthority{" +
                 "path='" + path + '\'' +
                 ", roles=" + Arrays.toString(roles) +
+                ", httpMethods=" + httpMethods +
                 '}';
     }
 }

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class SecurityUtil {
     private final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
 
-    public Object getUserServiceInstance() {
+    public Class<?> getUserRepositoryClass() {
         if (AdvancedFilterChecker.isAdvancedFiltered()) {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
@@ -26,7 +26,7 @@ public class SecurityUtil {
                 for (Class<?> cls : getAllClassesFromClassLoader(cl)) {
                     if (cls.isAnnotationPresent(UserHandler.class)) {
                         try {
-                            return cls.getDeclaredConstructor().newInstance();
+                            return cls;
                         } catch (Exception e) {
                             throw new RuntimeException("Error instantiating UserService", e);
                         }
@@ -36,7 +36,7 @@ public class SecurityUtil {
 
             throw new RuntimeException("No UserHandler found");
         } else {
-            return new Object();
+            return null;
         }
     }
 
@@ -46,7 +46,7 @@ public class SecurityUtil {
 
     public Object findUserByUsername(Object userService,  String username) {
         try {
-            Method method = userService.getClass().getDeclaredMethod("getUserByUsername", String.class);
+            Method method = userService.getClass().getDeclaredMethod("findUserByUsername", String.class);
             method.setAccessible(true);
             return method.invoke(userService, username);
         } catch (NoSuchMethodException e) {

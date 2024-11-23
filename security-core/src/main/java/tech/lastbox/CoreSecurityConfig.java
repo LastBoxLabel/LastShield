@@ -1,5 +1,6 @@
 package tech.lastbox;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +45,17 @@ public class CoreSecurityConfig {
                     .cors(corsConfig.configure())
                     .csrf(this::configureCsrfProtection)
                     .authorizeHttpRequests(configureAuthorities())
-                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
+                    .exceptionHandling(exceptionHandling ->
+                            exceptionHandling
+                                    .authenticationEntryPoint((request, response, authException) -> {
+                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                                    })
+                                    .accessDeniedHandler((request, response, accessDeniedException) -> {
+                                        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+                                    })
+                    )
+                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                    .build();
         }catch (Exception e){
             throw new RuntimeException(e);
         }
@@ -52,22 +63,41 @@ public class CoreSecurityConfig {
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> configureAuthorities() {
         return authorize -> {
-            authorities.forEach(authority -> {
-                if (authority.getHttpMethods().isEmpty()) {
-                    authorize.requestMatchers(authority.getPath())
-                            .hasAnyRole(authority.getRoles());
-                } else {
-                    authority.getHttpMethods().forEach(method -> {
-                        authorize.requestMatchers(method.name(), authority.getPath())
-                                .hasAnyRole(authority.getRoles());
-                    });
-                }
-            });
+            authorities.forEach(authority -> configureAuthority(authorize, authority));
+            authorize.anyRequest().authenticated();
         };
     }
 
-    public void configureJwt(JwtConfig jwtConfig) {
-        JwtServiceConfig.configureJwtService(jwtConfig);
+    private void configureAuthority(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorize,
+                                    RouteAuthority authority) {
+        if (authority.getHttpMethods().isEmpty()) {
+            configurePathOnly(authorize, authority);
+        } else {
+            configurePathWithMethods(authorize, authority);
+        }
+    }
+
+    private void configurePathOnly(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorize,
+                                   RouteAuthority authority) {
+        var matcher = authorize.requestMatchers(authority.getPath());
+        applyAuthorization(matcher, authority.getRoles());
+    }
+
+    private void configurePathWithMethods(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorize,
+                                          RouteAuthority authority) {
+        authority.getHttpMethods().forEach(method -> {
+            var matcher = authorize.requestMatchers(method.name(), authority.getPath());
+            applyAuthorization(matcher, authority.getRoles());
+        });
+    }
+
+    private void applyAuthorization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizedUrl authorizedUrl,
+                                    String[] roles) {
+        if (roles == null) {
+            authorizedUrl.permitAll();
+        } else {
+            authorizedUrl.hasAnyRole(roles);
+        }
     }
 
     private void configureCsrfProtection(CsrfConfigurer<HttpSecurity> csrf){
@@ -78,7 +108,7 @@ public class CoreSecurityConfig {
         this.authorities.add(routeAuthority);
         if (!AdvancedFilterChecker.isAdvancedFiltered()) {
             setAdvancedFilter();
-            securityFilter.setUserService(securityUtil.getUserServiceInstance());
+            securityFilter.setUserRepository(securityUtil.getUserRepositoryClass());
         }
     }
 

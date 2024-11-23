@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.enviroment;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +11,9 @@ public class BasicAuthProperties {
     private String issuer;
     private String secretKey;
     private final Logger logger = LoggerFactory.getLogger(BasicAuthProperties.class);
+    private String adminName = "Admin";
+    private String adminUsername = "admin";
+    private String adminPassword = "admin";
 
     public String getIssuer() {
         return issuer;
@@ -34,5 +37,29 @@ public class BasicAuthProperties {
             throw new InvalidSecretKeyException("Secret Key cannot be null or empty.");
         }
         this.secretKey = secretKey;
+    }
+
+    public String getAdminUsername() {
+        return adminUsername;
+    }
+
+    public void setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
+    }
+
+    public String getAdminPassword() {
+        return adminPassword;
+    }
+
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
+
+    public String getAdminName() {
+        return adminName;
+    }
+
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
     }
 }
