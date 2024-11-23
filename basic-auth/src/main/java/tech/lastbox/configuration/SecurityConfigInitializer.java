@@ -1,5 +1,6 @@
 package tech.lastbox.configuration;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +12,7 @@ import tech.lastbox.repository.TokenRepository;
 import java.util.List;
 
 @Configuration
+@ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
 public class SecurityConfigInitializer {
     private final BasicAuthProperties basicAuthProperties;
     private final TokenRepository tokenRepository;
@@ -30,27 +32,32 @@ public class SecurityConfigInitializer {
     }
 
     @Bean
+    @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
     public SecurityConfig initializeSecurity(SecurityConfig securityConfig) {
         securityConfig.corsAllowCredentials(true)
                 .corsAllowedOrigins(List.of("*"))
                 .corsAllowedMethods(List.of("*"))
                 .addRouteAuthority("/login")
                 .addRouteAuthority("/register")
+                .addRouteAuthority("/api-docs/**")
+                .addRouteAuthority("/swagger-ui/**")
                 .addRouteAuthority("/admin", "ADMIN")
                 .addRouteAuthority("/actuator", "ADMIN")
                 .addRouteAuthority("/actuator/**", "ADMIN")
-                .addRouteAuthority("/**", List.of("USER", "ADMIN"))
+                .addRouteAuthority("/**")
                 .setCsrfProtection(false)
                 .build();
         return securityConfig;
     }
 
     @Bean
+    @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
+    @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
     public JwtService jwtService() {
         return new JwtService(getJwtConfig());
     }

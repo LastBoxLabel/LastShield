@@ -1,8 +1,14 @@
 package tech.lastbox.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springdoc.core.annotations.RouterOperation;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
+@ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
 public class AuthController {
     private final UserService userService;
     private final JwtService jwtService;
@@ -30,6 +37,24 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(
+            summary = "User Login",
+            description = "Authenticate a user by validating their credentials. If successful, returns a JWT token to be used for further authenticated requests.",
+            operationId = "loginUser",
+            tags = {"Authentication"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Login successful. Returns user details and a JWT token for authentication.",
+                    content = @Content(schema = @Schema(implementation = AuthResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication failed. Incorrect username or password.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            )
+    })
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
         Optional<User> userOptional = userService.login(loginRequest.username(), loginRequest.password());
         if (userOptional.isEmpty()) {
@@ -41,6 +66,24 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Operation(
+            summary = "User Registration",
+            description = "Registers a new user in the database. If successful, returns a JWT token for immediate authentication.",
+            operationId = "registerUser",
+            tags = {"Authentication"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "User registration successful. Returns user details and a JWT token for authentication.",
+                    content = @Content(schema = @Schema(implementation = AuthResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Registration failed. The username is already in use.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            )
+    })
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerRequest) {
         try {
             User user = userService.createUser(registerRequest.name(), registerRequest.username(), registerRequest.password());

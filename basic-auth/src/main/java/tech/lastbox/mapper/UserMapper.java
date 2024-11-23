@@ -1,11 +1,13 @@
 package tech.lastbox.mapper;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import tech.lastbox.dto.UserDTO;
 import tech.lastbox.entity.User;
 import tech.lastbox.repository.UserRepository;
 
 @Component
+@ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
 public class UserMapper {
     private final UserRepository userRepository;
 

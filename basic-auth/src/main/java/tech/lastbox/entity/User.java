@@ -1,14 +1,15 @@
 package tech.lastbox.entity;
 
 import jakarta.persistence.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import tech.lastbox.annotations.Password;
 import tech.lastbox.annotations.Username;
 
 import java.util.Objects;
 
-
 @Entity
 @Table(name = "users")
+@ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
 public class User {
     @Id
     @GeneratedValue

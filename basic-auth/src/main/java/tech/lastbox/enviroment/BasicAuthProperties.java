@@ -2,11 +2,13 @@ package tech.lastbox.enviroment;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "lastshield.basicauth")
+@ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
 public class BasicAuthProperties {
     private String issuer;
     private String secretKey;

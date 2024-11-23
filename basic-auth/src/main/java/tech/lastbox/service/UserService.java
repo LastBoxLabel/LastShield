@@ -1,8 +1,8 @@
 package tech.lastbox.service;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tech.lastbox.annotations.UserHandler;
 import tech.lastbox.dto.UserDTO;
 import tech.lastbox.entity.User;
 import tech.lastbox.exception.*;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@UserHandler
+@ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
 public class UserService {
     private final tech.lastbox.repository.UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
