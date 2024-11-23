@@ -14,7 +14,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @Component
 public class SecurityUtil {
     private final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
