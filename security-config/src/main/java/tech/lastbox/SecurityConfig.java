@@ -3,6 +3,7 @@ package tech.lastbox;
 import org.springframework.stereotype.Component;
 import tech.lastbox.http.HttpMethod;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Component
@@ -55,6 +56,21 @@ public class SecurityConfig {
         return this;
     }
 
+    public SecurityConfig addRouteAuthority(String path){
+        coreSecurityConfig.addAuthority(new RouteAuthority(path));
+        return this;
+    }
+
+    public SecurityConfig addRouteAuthority(String path, HttpMethod httpMethod){
+        coreSecurityConfig.addAuthority(new RouteAuthority(path, httpMethod));
+        return this;
+    }
+
+    public SecurityConfig addRouteAuthority(String path, HashSet<HttpMethod> httpMethods){
+        httpMethods.forEach(httpMethod -> coreSecurityConfig.addAuthority(new RouteAuthority(path, httpMethod)));
+        return this;
+    }
+
     public SecurityConfig addRouteAuthority(String path, String role){
         coreSecurityConfig.addAuthority(new RouteAuthority(path, role));
         return this;
@@ -72,11 +88,6 @@ public class SecurityConfig {
 
     public SecurityConfig addRouteAuthority(String path, String role, List<HttpMethod> httpMethods){
         httpMethods.forEach(httpMethod -> coreSecurityConfig.addAuthority(new RouteAuthority(path, role, httpMethod)));
-        return this;
-    }
-
-    public SecurityConfig configureJwtService(JwtConfig jwtConfig) {
-        coreSecurityConfig.configureJwt(jwtConfig);
         return this;
     }
 

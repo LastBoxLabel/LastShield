@@ -102,6 +102,49 @@ public class JwtService {
     }
 
     /**
+     * Generates a JWT for the specified subject with a given issuer.
+     *
+     * <p>The token includes claims for expiration, issued time, issuer, without scope. It is saved
+     * in the configured token store if available.
+     *
+     * @param subject the subject (e.g., user identifier) for whom the token is generated
+     * @param issuer the trusted issuer of the token
+     * @return a {@link Token} object containing the generated token and its metadata
+     * @throws TokenCreationException if the subject, issuer, or scope is invalid
+     */
+    @Transactional
+    public Token generateToken(String subject, String issuer) {
+        if (subject == null || subject.isEmpty()) {
+            throw new TokenCreationException("Subject must not be null or empty.");
+        }
+
+        if (!trustedIssuers.contains(issuer)) {
+            throw new TokenCreationException("Issuer must be in issuers trusted list.");
+        }
+
+        Instant now = Instant.now();
+        Instant expiresIn = DateUtil.getExpirationDate(now, expirationAmount, expirationTimeUnit);
+
+        List<String> scope = List.of("name, username");
+
+        String token = JWT.create()
+                .withSubject(subject)
+                .withExpiresAt(expiresIn)
+                .withIssuedAt(now)
+                .withIssuer(issuer)
+                .withClaim("scope", scope)
+                .sign(algorithm);
+
+        if (tokenStore != null) {
+            TokenEntity tokenEntity = new TokenEntity(token, now, expiresIn, subject, issuer, scope);
+            tokenStore.save(tokenEntity);
+        }
+
+        logger.info("Generating token with subject: {}", subject);
+        return new Token(token, subject, instantToLocalDateTime(now), instantToLocalDateTime(expiresIn), issuer, scope, false);
+    }
+
+    /**
      * Revokes the specified token, marking it as invalid in the token store.
      *
      * <p>If the token does not exist in the store or the store is not configured, an exception is thrown.

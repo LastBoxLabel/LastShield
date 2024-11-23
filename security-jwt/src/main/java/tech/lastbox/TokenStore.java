@@ -17,7 +17,7 @@ public interface TokenStore {
      *
      * @param tokenEntity the token entity to be saved.
      */
-    void save(TokenEntity tokenEntity);
+    TokenEntity save(TokenEntity tokenEntity);
 
     /**
      * Finds a token entity by its token string.
