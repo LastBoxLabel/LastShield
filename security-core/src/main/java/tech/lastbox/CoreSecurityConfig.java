@@ -1,23 +1,17 @@
 package tech.lastbox;
 
-
-import jakarta.annotation.PostConstruct;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-
-import org.springframework.context.annotation.Lazy;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Configuration
@@ -25,13 +19,11 @@ import java.util.List;
 @EnableWebSecurity
 public class CoreSecurityConfig {
     private boolean isCalled = false;
-    private final CorsConfig corsConfig;
-    private String jwtSecretKey;
-    private long jwtExpiration;
-    private final SecurityUtil securityUtil;
     private boolean csrfProtection = true;
-    private final List<RouteAuthority> authorities = new ArrayList<>();
+    private final CorsConfig corsConfig;
+    private final SecurityUtil securityUtil;
     private final SecurityFilter securityFilter;
+    private final List<RouteAuthority> authorities = new ArrayList<>();
 
     public CoreSecurityConfig(CorsConfig corsConfig, SecurityUtil securityUtil, SecurityFilter securityFilter) {
         this.corsConfig = corsConfig;
@@ -43,32 +35,43 @@ public class CoreSecurityConfig {
         AdvancedFilterChecker.setAdvancedFiltered(true);
     }
 
-
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        if (!isCalled) {
-            throw new RuntimeException("Build() method is not called");
+        if (!isCalled) throw new RuntimeException("Build() method is not called");
+
+        try {
+            return http
+                    .cors(corsConfig.configure())
+                    .csrf(this::configureCsrfProtection)
+                    .authorizeHttpRequests(configureAuthorities())
+                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
+        }catch (Exception e){
+            throw new RuntimeException(e);
         }
-        return http
-                .cors(cors -> corsConfig.corsConfigurationSource())
-                .csrf(csrf -> {
-                    if (!csrfProtection) csrf.disable();
-                })
-                .authorizeHttpRequests(authorize -> {
-                    if (authorities.isEmpty()) {
-                        authorize.requestMatchers("/**").permitAll();
-                    } else {
-                        authorities.forEach((authority) -> {
-                            authorize.requestMatchers(authority.getPath()).hasAnyRole(authority.getRoles());
-                        });
-                        authorize.anyRequest().authenticated();
-                    }
-                })
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
+    }
+
+    private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> configureAuthorities() {
+        return authorize -> {
+            authorities.forEach(authority -> {
+                if (authority.getHttpMethods().isEmpty()) {
+                    authorize.requestMatchers(authority.getPath())
+                            .hasAnyRole(authority.getRoles());
+                } else {
+                    authority.getHttpMethods().forEach(method -> {
+                        authorize.requestMatchers(method.name(), authority.getPath())
+                                .hasAnyRole(authority.getRoles());
+                    });
+                }
+            });
+        };
     }
 
     public void configureJwt(JwtConfig jwtConfig) {
         JwtServiceConfig.configureJwtService(jwtConfig);
+    }
+
+    private void configureCsrfProtection(CsrfConfigurer<HttpSecurity> csrf){
+        if(!csrfProtection) csrf.disable();
     }
 
     public void addAuthority(RouteAuthority routeAuthority) {
@@ -77,14 +80,13 @@ public class CoreSecurityConfig {
             setAdvancedFilter();
             securityFilter.setUserService(securityUtil.getUserServiceInstance());
         }
-
     }
 
     public void setCsrfProtection(boolean csrfProtection) {
         this.csrfProtection = csrfProtection;
     }
 
-    public synchronized void isCalled() {
+    public void isCalled(){
         this.isCalled = true;
     }
 }
