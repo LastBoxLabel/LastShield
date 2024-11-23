@@ -33,12 +33,14 @@ public class SecurityConfigInitializer {
     public SecurityConfig initializeSecurity(SecurityConfig securityConfig) {
         securityConfig.corsAllowCredentials(true)
                 .corsAllowedOrigins(List.of("*"))
+                .corsAllowedMethods(List.of("*"))
+                .addRouteAuthority("/login")
+                .addRouteAuthority("/register")
                 .addRouteAuthority("/admin", "ADMIN")
                 .addRouteAuthority("/actuator", "ADMIN")
                 .addRouteAuthority("/actuator/**", "ADMIN")
                 .addRouteAuthority("/**", List.of("USER", "ADMIN"))
-                .configureJwtService(getJwtConfig())
-                .setCsrfProtection(true)
+                .setCsrfProtection(false)
                 .build();
         return securityConfig;
     }
