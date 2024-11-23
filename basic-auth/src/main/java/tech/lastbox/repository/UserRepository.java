@@ -2,12 +2,14 @@ package tech.lastbox.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import tech.lastbox.annotations.UserHandler;
 import tech.lastbox.dto.UserDTO;
 import tech.lastbox.entity.User;
 
 import java.util.List;
 import java.util.Optional;
 
+@UserHandler
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserById(Long id);
     Optional<User> findUserByUsername(String email);
