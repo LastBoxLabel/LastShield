@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +48,11 @@ public class CoreSecurityConfig {
                     .cors(corsConfig.configure())
                     .csrf(this::configureCsrfProtection)
                     .authorizeHttpRequests(configureAuthorities())
+                    .exceptionHandling(exceptionHandling ->
+                            exceptionHandling
+                                    .authenticationEntryPoint((request, response, authException) -> handleUnauthorized(response))
+                                    .accessDeniedHandler((request, response, accessDeniedException) -> handleAccessDenied(response))
+                    )
                     .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                     .build();
         }catch (Exception e){
@@ -112,5 +120,25 @@ public class CoreSecurityConfig {
 
     public void isCalled(){
         this.isCalled = true;
+    }
+
+    private void writeErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json");
+        String jsonResponse = String.format(
+                "{\"message\": \"%s\", \"status\": %d, \"timestamp\": \"%s\"}",
+                message,
+                status,
+                LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        );
+        response.getWriter().write(jsonResponse);
+    }
+
+    private void handleUnauthorized(HttpServletResponse response) throws IOException {
+        writeErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+    }
+
+    private void handleAccessDenied(HttpServletResponse response) throws IOException {
+        writeErrorResponse(response, HttpServletResponse.SC_FORBIDDEN, "Access Denied");
     }
 }
