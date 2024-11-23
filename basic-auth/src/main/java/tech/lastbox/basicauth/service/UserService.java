@@ -1,12 +1,15 @@
-package tech.lastbox.service;
+package tech.lastbox.basicauth.service;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tech.lastbox.dto.UserDTO;
-import tech.lastbox.entity.User;
-import tech.lastbox.exception.*;
+import tech.lastbox.basicauth.dto.UserDTO;
+import tech.lastbox.basicauth.entity.User;
+import tech.lastbox.basicauth.exception.DuplicatedUserException;
+import tech.lastbox.basicauth.exception.UnregisteredUserException;
+import tech.lastbox.basicauth.exception.UsernameNotFoundException;
+import tech.lastbox.basicauth.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +23,10 @@ import java.util.Optional;
 @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
 @Schema(description = "Service for managing user-related operations, including user creation, login, and updates.")
 public class UserService {
-    private final tech.lastbox.repository.UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(tech.lastbox.repository.UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

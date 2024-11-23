@@ -1,12 +1,12 @@
-package tech.lastbox.repository;
+package tech.lastbox.basicauth.repository;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import tech.lastbox.annotations.UserHandler;
-import tech.lastbox.dto.UserDTO;
-import tech.lastbox.entity.User;
+import tech.lastbox.basicauth.dto.UserDTO;
+import tech.lastbox.basicauth.entity.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * Find a user by their unique username.
      *
-     * @param email the username (email) of the user.
+     * @param username the username of the user.
      * @return an Optional containing the User if found, empty if not.
      */
     @Schema(description = "Finds a user by their unique username.")
@@ -45,7 +45,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * Checks if a user exists with the given username.
      *
-     * @param email the username (email) to check.
+     * @param username the username to check.
      * @return true if a user with the given username exists, false otherwise.
      */
     @Schema(description = "Checks if a user exists with the specified username.")
@@ -74,7 +74,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      *
      * @return a list of UserDTO objects representing users with the 'USER' role.
      */
-    @Query("SELECT new tech.lastbox.dto.UserDTO(u.id, u.name, u.username, u.role) FROM User u WHERE u.role = 'USER'")
+    @Query("SELECT new tech.lastbox.basicauth.dto.UserDTO(u.id, u.name, u.username, u.role) FROM User u WHERE u.role = 'USER'")
     @Schema(description = "Retrieves all users with the 'USER' role as UserDTOs.")
     List<UserDTO> findAllUsersAsDTO();
 }

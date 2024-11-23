@@ -1,4 +1,4 @@
-package tech.lastbox.exception;
+package tech.lastbox.basicauth.exception;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

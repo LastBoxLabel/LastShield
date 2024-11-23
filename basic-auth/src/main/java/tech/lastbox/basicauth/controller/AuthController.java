@@ -1,4 +1,4 @@
-package tech.lastbox.controller;
+package tech.lastbox.basicauth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tech.lastbox.JwtService;
 import tech.lastbox.Token;
-import tech.lastbox.dto.*;
-import tech.lastbox.entity.User;
-import tech.lastbox.enviroment.BasicAuthProperties;
-import tech.lastbox.exception.DuplicatedUserException;
-import tech.lastbox.service.UserService;
+import tech.lastbox.basicauth.dto.AuthResponseDTO;
+import tech.lastbox.basicauth.dto.ErrorResponse;
+import tech.lastbox.basicauth.dto.LoginRequest;
+import tech.lastbox.basicauth.dto.RegisterRequest;
+import tech.lastbox.basicauth.entity.User;
+import tech.lastbox.basicauth.enviroment.BasicAuthProperties;
+import tech.lastbox.basicauth.exception.DuplicatedUserException;
+import tech.lastbox.basicauth.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

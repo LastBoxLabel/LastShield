@@ -1,4 +1,4 @@
-package tech.lastbox.repository;
+package tech.lastbox.basicauth.repository;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

@@ -1,11 +1,11 @@
-package tech.lastbox.mapper;
+package tech.lastbox.basicauth.mapper;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import tech.lastbox.dto.UserDTO;
-import tech.lastbox.entity.User;
-import tech.lastbox.repository.UserRepository;
+import tech.lastbox.basicauth.dto.UserDTO;
+import tech.lastbox.basicauth.entity.User;
+import tech.lastbox.basicauth.repository.UserRepository;
 
 /**
  * Mapper class that provides the transformation between User entity and UserDTO.

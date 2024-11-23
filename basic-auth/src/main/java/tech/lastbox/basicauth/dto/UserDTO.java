@@ -1,4 +1,4 @@
-package tech.lastbox.dto;
+package tech.lastbox.basicauth.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

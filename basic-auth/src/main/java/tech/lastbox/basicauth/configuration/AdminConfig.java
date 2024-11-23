@@ -1,4 +1,4 @@
-package tech.lastbox.configuration;
+package tech.lastbox.basicauth.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import tech.lastbox.entity.User;
-import tech.lastbox.enviroment.BasicAuthProperties;
-import tech.lastbox.repository.UserRepository;
+import tech.lastbox.basicauth.entity.User;
+import tech.lastbox.basicauth.enviroment.BasicAuthProperties;
+import tech.lastbox.basicauth.repository.UserRepository;
 
 import java.util.Optional;
 

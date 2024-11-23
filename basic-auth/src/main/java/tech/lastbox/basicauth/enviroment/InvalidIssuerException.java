@@ -1,4 +1,4 @@
-package tech.lastbox.enviroment;
+package tech.lastbox.basicauth.enviroment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
