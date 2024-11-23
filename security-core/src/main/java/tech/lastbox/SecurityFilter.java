@@ -78,8 +78,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
 
         if (AdvancedFilterChecker.isAdvancedFiltered()) {
-            return path.startsWith("/login") ||
-                    path.startsWith("/register");
+            return AdvancedFilterChecker.isInShoudNotFilterList(path);
         } else {
             return true;
         }

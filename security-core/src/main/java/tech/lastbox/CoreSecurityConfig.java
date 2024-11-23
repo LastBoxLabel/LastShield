@@ -45,15 +45,6 @@ public class CoreSecurityConfig {
                     .cors(corsConfig.configure())
                     .csrf(this::configureCsrfProtection)
                     .authorizeHttpRequests(configureAuthorities())
-                    .exceptionHandling(exceptionHandling ->
-                            exceptionHandling
-                                    .authenticationEntryPoint((request, response, authException) -> {
-                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                                    })
-                                    .accessDeniedHandler((request, response, accessDeniedException) -> {
-                                        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
-                                    })
-                    )
                     .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                     .build();
         }catch (Exception e){
@@ -106,6 +97,9 @@ public class CoreSecurityConfig {
 
     public void addAuthority(RouteAuthority routeAuthority) {
         this.authorities.add(routeAuthority);
+        if (routeAuthority.getRoles() == null) {
+            AdvancedFilterChecker.addShoudNotFilterPath(routeAuthority.getPath());
+        }
         if (!AdvancedFilterChecker.isAdvancedFiltered()) {
             setAdvancedFilter();
             securityFilter.setUserRepository(securityUtil.getUserRepositoryClass());
