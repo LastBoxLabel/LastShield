@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.security.core;
 
 import java.util.ArrayList;
 import java.util.List;

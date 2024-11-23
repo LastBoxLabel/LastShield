@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.security.core;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

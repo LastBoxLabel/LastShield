@@ -3,8 +3,8 @@ package tech.lastbox.basicauth.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import tech.lastbox.annotations.Password;
-import tech.lastbox.annotations.Username;
+import tech.lastbox.security.core.annotations.Password;
+import tech.lastbox.security.core.annotations.Username;
 
 import java.util.Objects;
 

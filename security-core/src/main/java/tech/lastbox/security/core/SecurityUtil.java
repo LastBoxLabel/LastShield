@@ -1,11 +1,11 @@
-package tech.lastbox;
+package tech.lastbox.security.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import tech.lastbox.annotations.UserHandler;
+import tech.lastbox.security.core.annotations.UserHandler;
 
 import java.io.File;
 import java.lang.reflect.Field;

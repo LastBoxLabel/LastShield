@@ -1,6 +1,6 @@
-package tech.lastbox;
+package tech.lastbox.security.core;
 
-import tech.lastbox.http.HttpMethod;
+import tech.lastbox.security.core.http.HttpMethod;
 
 import java.util.ArrayList;
 import java.util.Arrays;

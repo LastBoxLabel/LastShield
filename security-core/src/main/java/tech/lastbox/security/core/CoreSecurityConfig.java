@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.security.core;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;

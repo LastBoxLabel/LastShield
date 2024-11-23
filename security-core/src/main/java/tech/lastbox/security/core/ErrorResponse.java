@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.security.core;
 
 public final class ErrorResponse {
     private final String message;

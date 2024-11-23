@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.security.core;
 
 public class EmptyTokenException extends RuntimeException {
 

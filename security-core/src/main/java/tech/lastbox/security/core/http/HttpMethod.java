@@ -1,4 +1,4 @@
-package tech.lastbox.http;
+package tech.lastbox.security.core.http;
 
 public enum HttpMethod {
     GET("Retrieve data"),

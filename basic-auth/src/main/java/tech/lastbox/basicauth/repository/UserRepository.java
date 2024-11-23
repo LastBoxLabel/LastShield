@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import tech.lastbox.annotations.UserHandler;
+import tech.lastbox.security.core.annotations.UserHandler;
 import tech.lastbox.basicauth.dto.UserDTO;
 import tech.lastbox.basicauth.entity.User;
 
