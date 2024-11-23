@@ -11,9 +11,14 @@ import tech.lastbox.repository.TokenRepository;
 
 import java.util.List;
 
+/**
+ * Configuration class that initializes security settings such as JWT, CORS, and route protection.
+ * This class is activated when the "lastshield.basicauth" property is set to true.
+ */
 @Configuration
 @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
 public class SecurityConfigInitializer {
+
     private final BasicAuthProperties basicAuthProperties;
     private final TokenRepository tokenRepository;
 
@@ -22,6 +27,11 @@ public class SecurityConfigInitializer {
         this.tokenRepository = tokenRepository;
     }
 
+    /**
+     * Creates a JWT configuration bean.
+     *
+     * @return JwtConfig for configuring JWT behavior.
+     */
     private JwtConfig getJwtConfig() {
         return new JwtConfig(JwtAlgorithm.HMAC256,
                 basicAuthProperties.getSecretKey(),
@@ -31,6 +41,12 @@ public class SecurityConfigInitializer {
                 tokenRepository);
     }
 
+    /**
+     * Configures security settings for the application.
+     *
+     * @param securityConfig an instance of SecurityConfig to be configured (auto-injected by Spring IoC).
+     * @return the configured SecurityConfig instance.
+     */
     @Bean
     @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
     public SecurityConfig initializeSecurity(SecurityConfig securityConfig) {
@@ -50,12 +66,22 @@ public class SecurityConfigInitializer {
         return securityConfig;
     }
 
+    /**
+     * Creates a PasswordEncoder bean using BCryptPasswordEncoder.
+     *
+     * @return PasswordEncoder that uses BCrypt for hashing passwords.
+     */
     @Bean
     @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Creates a JwtService bean for generating JWT tokens.
+     *
+     * @return JwtService used for handling JWT generation and validation.
+     */
     @Bean
     @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
     public JwtService jwtService() {

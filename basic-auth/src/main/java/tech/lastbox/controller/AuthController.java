@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springdoc.core.annotations.RouterOperation;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +22,16 @@ import tech.lastbox.service.UserService;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * Controller responsible for authentication and user management, including login and registration.
+ * This controller exposes endpoints to authenticate users and register new users, generating
+ * JWT tokens for valid users.
+ */
 @RestController
 @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
+@Schema(description = "Handles authentication and user registration for the application.")
 public class AuthController {
+
     private final UserService userService;
     private final JwtService jwtService;
     private final BasicAuthProperties basicAuthProperties;
@@ -36,6 +42,12 @@ public class AuthController {
         this.basicAuthProperties = basicAuthProperties;
     }
 
+    /**
+     * Endpoint for user login. Validates credentials and returns a JWT token.
+     *
+     * @param loginRequest the login credentials containing the username and password
+     * @return ResponseEntity with the login result and JWT token
+     */
     @PostMapping("/login")
     @Operation(
             summary = "User Login",
@@ -55,7 +67,7 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Optional<User> userOptional = userService.login(loginRequest.username(), loginRequest.password());
         if (userOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Invalid username or password.", HttpStatus.UNAUTHORIZED.toString(), LocalDateTime.now()));
@@ -65,6 +77,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(new AuthResponseDTO(user.getId(), token.token(), "Login successful.", LocalDateTime.now()));
     }
 
+    /**
+     * Endpoint for user registration. Registers a new user and returns a JWT token for authentication.
+     *
+     * @param registerRequest the user registration details
+     * @return ResponseEntity with the registration result and JWT token
+     */
     @PostMapping("/register")
     @Operation(
             summary = "User Registration",
@@ -84,11 +102,11 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
-    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerRequest) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
             User user = userService.createUser(registerRequest.name(), registerRequest.username(), registerRequest.password());
             Token token = jwtService.generateToken(user.getUsername(), basicAuthProperties.getIssuer());
-            return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponseDTO(user.getId(), token.token(), "User created sucessfully.", LocalDateTime.now()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponseDTO(user.getId(), token.token(), "User created successfully.", LocalDateTime.now()));
         } catch (DuplicatedUserException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), HttpStatus.CONFLICT.toString(), LocalDateTime.now()));
         }

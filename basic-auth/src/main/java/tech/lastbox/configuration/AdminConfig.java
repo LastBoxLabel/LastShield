@@ -13,6 +13,10 @@ import tech.lastbox.repository.UserRepository;
 
 import java.util.Optional;
 
+/**
+ * Configuration class for setting up an admin user.
+ * This configuration is activated when the "lastshield.basicauth" property is true.
+ */
 @Configuration
 @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
 public class AdminConfig {
@@ -27,6 +31,12 @@ public class AdminConfig {
         this.basicAuthProperties = basicAuthProperties;
     }
 
+    /**
+     * CommandLineRunner bean that runs when the application starts.
+     * It checks if an admin user exists, and if not, creates one with the configured properties.
+     *
+     * @return CommandLineRunner that sets up or updates the admin user.
+     */
     @Bean
     @ConditionalOnProperty(name = "lastshield.basicauth", havingValue = "true")
     public CommandLineRunner setupAdminUser() {
@@ -46,10 +56,12 @@ public class AdminConfig {
                 userRepository.save(adminUser);
                 logger.info("Admin user registered with login: {}", adminUsername);
             } else {
+                // Update existing admin user if necessary
                 User adminUser = adminOptional.get();
                 if (!adminUser.getName().equals(adminName)) adminUser.setName(adminName);
                 if (!adminUser.getUsername().equals(adminUsername)) adminUser.setUsername(adminUsername);
                 if (!passwordEncoder.matches(adminPassword, adminUser.getPassword())) adminUser.setPassword(passwordEncoder.encode(adminPassword));
+                userRepository.save(adminUser);
                 logger.info("Admin user is set with login: {}", adminUsername);
             }
         };
