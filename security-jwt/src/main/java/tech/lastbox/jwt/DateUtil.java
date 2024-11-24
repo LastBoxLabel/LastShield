@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tech.lastbox;
+package tech.lastbox.jwt;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

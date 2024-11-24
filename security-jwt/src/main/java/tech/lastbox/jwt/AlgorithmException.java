@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.jwt;
 
 class AlgorithmException extends RuntimeException {
     public AlgorithmException(String message) {

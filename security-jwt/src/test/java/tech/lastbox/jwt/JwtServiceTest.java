@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.jwt;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

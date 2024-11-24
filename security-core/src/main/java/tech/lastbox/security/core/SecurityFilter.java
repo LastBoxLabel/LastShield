@@ -12,7 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import tech.lastbox.JwtService;
+import tech.lastbox.jwt.JwtService;
 
 import java.io.IOException;
 import java.util.Optional;

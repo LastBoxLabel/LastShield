@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.jwt;
 
 import jakarta.persistence.*;
 import java.time.Instant;

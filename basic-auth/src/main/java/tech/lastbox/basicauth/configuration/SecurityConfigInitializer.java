@@ -5,9 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import tech.lastbox.*;
 import tech.lastbox.basicauth.enviroment.BasicAuthProperties;
 import tech.lastbox.basicauth.repository.TokenRepository;
+import tech.lastbox.jwt.ExpirationTimeUnit;
+import tech.lastbox.jwt.JwtAlgorithm;
+import tech.lastbox.jwt.JwtConfig;
+import tech.lastbox.jwt.JwtService;
 import tech.lastbox.security.SecurityConfig;
 
 import java.util.List;

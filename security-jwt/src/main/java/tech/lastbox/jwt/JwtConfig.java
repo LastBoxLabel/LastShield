@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tech.lastbox;
+package tech.lastbox.jwt;
 
 import java.util.HashSet;
 import java.util.List;

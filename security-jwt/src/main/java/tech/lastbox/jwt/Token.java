@@ -1,4 +1,4 @@
-package tech.lastbox;
+package tech.lastbox.jwt;
 
 import java.time.LocalDateTime;
 import java.util.List;

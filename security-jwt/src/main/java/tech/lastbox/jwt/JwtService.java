@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package tech.lastbox;
+package tech.lastbox.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +27,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import static tech.lastbox.DateUtil.*;
-import static tech.lastbox.TokenUtil.*;
+import static tech.lastbox.jwt.DateUtil.*;
+import static tech.lastbox.jwt.TokenUtil.*;
 
 /**
  * Service class responsible for managing JWT creation, validation, and revocation.

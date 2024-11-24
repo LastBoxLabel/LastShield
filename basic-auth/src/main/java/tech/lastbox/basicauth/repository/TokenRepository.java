@@ -3,8 +3,8 @@ package tech.lastbox.basicauth.repository;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
-import tech.lastbox.TokenEntity;
-import tech.lastbox.TokenStore;
+import tech.lastbox.jwt.TokenEntity;
+import tech.lastbox.jwt.TokenStore;
 
 /**
  * Repository interface for handling token-related operations.

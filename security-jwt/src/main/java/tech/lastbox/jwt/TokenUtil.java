@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tech.lastbox;
+package tech.lastbox.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Optional;
 
-import static tech.lastbox.DateUtil.instantToLocalDateTime;
+import static tech.lastbox.jwt.DateUtil.instantToLocalDateTime;
 
 /**
  * Utility class for handling JWT (JSON Web Token) operations such as converting JWT objects to

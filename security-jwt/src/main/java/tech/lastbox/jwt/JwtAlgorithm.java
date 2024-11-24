@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tech.lastbox;
+package tech.lastbox.jwt;
 
 import com.auth0.jwt.algorithms.Algorithm;
 
