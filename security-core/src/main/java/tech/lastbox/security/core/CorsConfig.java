@@ -12,6 +12,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * The {@code CorsConfig} class is responsible for configuring Cross-Origin Resource Sharing (CORS) settings
+ * for the application. It allows defining allowed origins, methods, headers, and whether credentials are allowed.
+ * <p>
+ * This configuration is used to control which domains can access resources in your application and how cross-origin
+ * requests are handled.
+ * </p>
+ */
 @Configuration
 public class CorsConfig {
     private List<String> allowedOrigins;
@@ -20,6 +28,22 @@ public class CorsConfig {
     private Boolean allowCredentials;
     private final Logger logger = LoggerFactory.getLogger(CorsConfig.class);
 
+    /**
+     * Configures CORS settings for HTTP security by returning a {@link Customizer} that customizes the {@link CorsConfigurer}
+     * for HTTP security. This method is invoked to apply CORS configurations, such as allowed origins, methods, headers,
+     * and credentials, to the HTTP security configuration.
+     * <p>
+     * If the attributes {@link CorsConfig#allowedOrigins}, {@link CorsConfig#allowedMethods},
+     * {@link CorsConfig#allowedHeaders}, or {@link CorsConfig#allowCredentials} are not set,
+     * default values will be applied, effectively allowing unrestricted CORS access.
+     * </p>
+     * <p>
+     * The returned {@link Customizer} is used to configure the {@link CorsConfigurer} as part of the security filter chain,
+     * enabling fine-grained control over cross-origin request handling in the application.
+     * </p>
+     *
+     * @return a {@link Customizer} that applies CORS settings to HTTP security.
+     */
     @Bean
     public Customizer<CorsConfigurer<HttpSecurity>> configure(){
         return cors -> corsConfigurationSource();
@@ -43,24 +67,59 @@ public class CorsConfig {
         source.registerCorsConfiguration("/**", configuration);
     }
 
+    /**
+     * Sets the allowed origins for cross-origin requests.
+     *
+     * @param origin a single allowed origin to be added to the list.
+     */
     public void setAllowedOrigins(String origin) {this.allowedOrigins.add(origin);}
 
+    /**
+     * Sets the allowed origins for cross-origin requests.
+     *
+     * @param allowedOrigins a list of allowed origins for cross-origin requests.
+     */
     public void setAllowedOrigins(List<String> allowedOrigins) {
         this.allowedOrigins = allowedOrigins;
     }
 
+    /**
+     * Sets the allowed HTTP methods for cross-origin requests.
+     *
+     * @param method a single allowed HTTP method (e.g., GET, POST) to be added to the list.
+     */
     public void setAllowedMethods(String method) {this.allowedMethods.add(method);}
 
+    /**
+     * Sets the allowed HTTP methods for cross-origin requests.
+     *
+     * @param allowedMethods a list of allowed HTTP methods (e.g., GET, POST, PUT, DELETE).
+     */
     public void setAllowedMethods(List<String> allowedMethods) {
         this.allowedMethods = allowedMethods;
     }
 
+    /**
+     * Sets the allowed headers for cross-origin requests.
+     *
+     * @param header a single allowed header to be added to the list.
+     */
     public void setAllowedHeaders(String header) {this.allowedHeaders.add(header);}
 
+    /**
+     * Sets the allowed headers for cross-origin requests.
+     *
+     * @param allowedHeaders a list of allowed headers for cross-origin requests.
+     */
     public void setAllowedHeaders(List<String> allowedHeaders) {
         this.allowedHeaders = allowedHeaders;
     }
 
+    /**
+     * Sets whether credentials (cookies, HTTP authentication, etc.) are allowed in cross-origin requests.
+     *
+     * @param allowCredentials {@code true} to allow credentials, {@code false} to disallow credentials.
+     */
     public void setAllowCredentials(Boolean allowCredentials) {
         this.allowCredentials = allowCredentials;
     }
