@@ -1,1 +1,1 @@
-org.springframework.context.ApplicationListener=tech.lastbox.security.SecurityBannerInitializer
+org.springframework.context.ApplicationListener=tech.lastbox.lastshield.security.SecurityBannerInitializer
