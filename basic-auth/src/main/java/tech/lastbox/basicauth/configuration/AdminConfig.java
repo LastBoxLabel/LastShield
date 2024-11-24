@@ -56,7 +56,6 @@ public class AdminConfig {
                 userRepository.save(adminUser);
                 logger.info("Admin user registered with login: {}", adminUsername);
             } else {
-                // Update existing admin user if necessary
                 User adminUser = adminOptional.get();
                 if (!adminUser.getName().equals(adminName)) adminUser.setName(adminName);
                 if (!adminUser.getUsername().equals(adminUsername)) adminUser.setUsername(adminUsername);

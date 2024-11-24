@@ -40,6 +40,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     @SuppressWarnings("unchecked")
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("Teste");
         try {
             if (AdvancedFilterChecker.isAdvancedFiltered()) {
                 var authorization = this.recoverToken(request);
@@ -60,6 +61,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                     Object userEntity = userEntityOptional.get();
                     var authorities = securityUtil.getUserAuthorities(userEntity);
+                    System.out.println(authorities);
                     var authentication = new UsernamePasswordAuthenticationToken(userEntity, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
@@ -79,6 +81,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
 
         if (AdvancedFilterChecker.isAdvancedFiltered()) {
+            System.out.println("teste");
             return AdvancedFilterChecker.isInShoudNotFilterList(path);
         } else {
             return true;

@@ -48,11 +48,6 @@ public class CoreSecurityConfig {
                     .cors(corsConfig.configure())
                     .csrf(this::configureCsrfProtection)
                     .authorizeHttpRequests(configureAuthorities())
-                    .exceptionHandling(exceptionHandling ->
-                            exceptionHandling
-                                    .authenticationEntryPoint((request, response, authException) -> handleUnauthorized(response))
-                                    .accessDeniedHandler((request, response, accessDeniedException) -> handleAccessDenied(response))
-                    )
                     .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                     .build();
         }catch (Exception e){
@@ -61,6 +56,7 @@ public class CoreSecurityConfig {
     }
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> configureAuthorities() {
+        System.out.println(authorities);
         return authorize -> {
             authorities.forEach(authority -> configureAuthority(authorize, authority));
             authorize.anyRequest().authenticated();
