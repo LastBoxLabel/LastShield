@@ -40,7 +40,6 @@
         <url>https://github.com/LastBoxLabel/LastShieldDocs.git</url>
     </scm>
 
-
     <packaging>pom</packaging>
 
     <modules>
@@ -49,6 +48,17 @@
         <module>security-config</module>
         <module>basic-auth</module>
     </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
