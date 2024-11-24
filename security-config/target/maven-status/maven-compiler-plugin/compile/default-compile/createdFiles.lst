@@ -1,6 +1,2 @@
-tech\lastbox\UserService.class
-tech\lastbox\Main.class
-tech\lastbox\Main$1.class
-tech\lastbox\SecurityConfig.class
-tech\lastbox\Controller.class
-tech\lastbox\UserEntity.class
+tech\lastbox\security\SecurityBannerInitializer.class
+tech\lastbox\security\SecurityConfig.class
