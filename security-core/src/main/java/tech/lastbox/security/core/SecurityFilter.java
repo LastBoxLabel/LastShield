@@ -7,10 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tech.lastbox.jwt.JwtService;
 
@@ -18,8 +17,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 
-@Configuration
-@EnableWebSecurity
+@Component
 public class SecurityFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private Object userRepository;
@@ -40,7 +38,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     @SuppressWarnings("unchecked")
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("Teste");
         try {
             if (AdvancedFilterChecker.isAdvancedFiltered()) {
                 var authorization = this.recoverToken(request);
@@ -79,9 +76,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-
         if (AdvancedFilterChecker.isAdvancedFiltered()) {
-            System.out.println("teste");
             return AdvancedFilterChecker.isInShoudNotFilterList(path);
         } else {
             return true;

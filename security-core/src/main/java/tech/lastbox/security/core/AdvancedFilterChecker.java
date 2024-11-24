@@ -21,8 +21,13 @@ class AdvancedFilterChecker {
     }
 
     public static boolean isInShoudNotFilterList(String pathToCompare) {
+        if (shoudNotFilterPathList.isEmpty()) {
+            return false;
+        }
+
         return shoudNotFilterPathList.stream()
-                .anyMatch(pathToCompare::startsWith);
+                .filter(path -> path != null && !path.trim().isEmpty())
+                .anyMatch(path -> pathToCompare.startsWith(path.trim()));
     }
 
     public static void addShoudNotFilterPath(String path) {

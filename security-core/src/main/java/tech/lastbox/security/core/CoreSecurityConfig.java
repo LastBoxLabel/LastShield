@@ -1,6 +1,8 @@
 package tech.lastbox.security.core;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,7 @@ public class CoreSecurityConfig {
     private final SecurityUtil securityUtil;
     private final SecurityFilter securityFilter;
     private final List<RouteAuthority> authorities = new ArrayList<>();
+    private final Logger logger = LoggerFactory.getLogger(CoreSecurityConfig.class);
 
     public CoreSecurityConfig(CorsConfig corsConfig, SecurityUtil securityUtil, SecurityFilter securityFilter) {
         this.corsConfig = corsConfig;
@@ -48,6 +51,11 @@ public class CoreSecurityConfig {
                     .cors(corsConfig.configure())
                     .csrf(this::configureCsrfProtection)
                     .authorizeHttpRequests(configureAuthorities())
+                    .exceptionHandling(exceptionHandling ->
+                            exceptionHandling
+                                    .authenticationEntryPoint((request, response, authException) -> handleUnauthorized(response))
+                                    .accessDeniedHandler((request, response, accessDeniedException) -> handleAccessDenied(response))
+                    )
                     .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                     .build();
         }catch (Exception e){
@@ -56,7 +64,6 @@ public class CoreSecurityConfig {
     }
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> configureAuthorities() {
-        System.out.println(authorities);
         return authorize -> {
             authorities.forEach(authority -> configureAuthority(authorize, authority));
             authorize.anyRequest().authenticated();
@@ -101,12 +108,18 @@ public class CoreSecurityConfig {
 
     public void addAuthority(RouteAuthority routeAuthority) {
         this.authorities.add(routeAuthority);
+        logger.debug("Added authority: {}", routeAuthority);
+
         if (routeAuthority.getRoles() == null) {
             AdvancedFilterChecker.addShoudNotFilterPath(routeAuthority.getPath());
+            logger.debug("Added path to not filter: {}", routeAuthority.getPath());
         }
+
         if (!AdvancedFilterChecker.isAdvancedFiltered()) {
             setAdvancedFilter();
             securityFilter.setUserRepository(securityUtil.getUserRepositoryClass());
+            logger.debug("Advanced filter set up with repository: {}",
+                    securityUtil.getUserRepositoryClass().getName());
         }
     }
 

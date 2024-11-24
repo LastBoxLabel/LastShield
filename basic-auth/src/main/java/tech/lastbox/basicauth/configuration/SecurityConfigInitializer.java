@@ -64,7 +64,7 @@ public class SecurityConfigInitializer {
                 .addRouteAuthority("/admin", "ADMIN")
                 .addRouteAuthority("/actuator", "ADMIN")
                 .addRouteAuthority("/actuator/**", "ADMIN")
-                .addRouteAuthority("/**")
+                .addRouteAuthority("/**", List.of("USER", "ADMIN"))
                 .setCsrfProtection(false)
                 .build();
         return securityConfig;
