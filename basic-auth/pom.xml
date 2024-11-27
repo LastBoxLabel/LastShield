@@ -10,6 +10,40 @@
     </parent>
 
     <artifactId>basic-auth</artifactId>
+    <name>LastShield Basic Auth</name>
+    <description>Basic Auth module for the LastShield Security Framework</description>
+    <url>https://github.com/LastBoxLabel/LastShieldDocs</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>aleschopf</id>
+            <name>Alecsandro Schopf Auer Junior</name>
+            <email>alecsandroauer@gmail.com</email>
+        </developer>
+        <developer>
+            <id>mathlimam</id>
+            <name>Matheus Lima Moreira</name>
+            <email>math.lima.m@gmail.com</email>
+        </developer>
+        <developer>
+            <id>lsmoraes16</id>
+            <name>Lucas Moraes</name>
+            <email>lsmoraes16.lm@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/LastBoxLabel/LastShieldDocs.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:LastBoxLabel/LastShieldDocs.git</developerConnection>
+        <url>https://github.com/LastBoxLabel/LastShieldDocs.git</url>
+    </scm>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -20,10 +54,12 @@
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>3.3.5</version>
         </dependency>
         <dependency>
             <groupId>tech.lastbox.lastshield</groupId>
@@ -46,6 +82,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>1.13.6</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -59,5 +96,76 @@
             <version>2.6.0</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- Plugin para assinar artefatos -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <keyname>65EF6BA2C413EE4D2551E92A97E37C964FDA6DCC</keyname>
+                    <gpgArguments>
+                        <arg>--batch</arg>
+                    </gpgArguments>
+                </configuration>
+            </plugin>
 
+            <!-- Plugin para gerar checksums -->
+            <plugin>
+                <groupId>net.ju-n.maven.plugins</groupId>
+                <artifactId>checksum-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>files</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <fileSets>
+                        <fileSet>
+                            <directory>${project.build.directory}</directory>
+                            <includes>
+                                <include>${project.build.finalName}.jar</include>
+                                <include>${project.build.finalName}-javadoc.jar</include>
+                                <include>${project.build.finalName}-sources.jar</include>
+                                <include>${project.build.finalName}.pom</include>
+                            </includes>
+                        </fileSet>
+                    </fileSets>
+                    <algorithms>
+                        <algorithm>MD5</algorithm>
+                        <algorithm>SHA-1</algorithm>
+                    </algorithms>
+                </configuration>
+            </plugin>
+
+            <!-- Outros plugins do Maven -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

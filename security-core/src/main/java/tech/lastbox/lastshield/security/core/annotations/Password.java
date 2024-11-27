@@ -29,11 +29,11 @@ import java.lang.annotation.Target;
  * <p>This annotation serves a very specific purpose in the security layer of the application.
  * When applied to a field, it allows {@link SecurityUtil} to identify which field contains the password
  * for the user, enabling secure handling of password data (e.g., encryption, validation)
- * without exposing the entire user object.</p>
+ * without exposing the entire user object.
  *
  * <p>The annotation is intended to be used on a single field in user-related entities (e.g., User, Admin)
  * to indicate that this field holds sensitive information, ensuring that it is treated appropriately within
- * the context of authentication workflows.</p>
+ * the context of authentication workflows.
  *
  */
 @Target(ElementType.FIELD)

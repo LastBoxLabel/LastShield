@@ -33,7 +33,6 @@ import java.util.List;
  * <p>
  * This configuration is used to control which domains can access resources in your application and how cross-origin
  * requests are handled.
- * </p>
  */
 @Configuration
 public class CorsConfig {
@@ -44,6 +43,13 @@ public class CorsConfig {
     private final Logger logger = LoggerFactory.getLogger(CorsConfig.class);
 
     /**
+     * Default constructor for the CorsConfig class.
+     * This constructor is used to instantiate the CorsConfig class.
+     */
+    public CorsConfig() {
+    }
+
+    /**
      * Configures CORS settings for HTTP security by returning a {@link Customizer} that customizes the {@link CorsConfigurer}
      * for HTTP security. This method is invoked to apply CORS configurations, such as allowed origins, methods, headers,
      * and credentials, to the HTTP security configuration.
@@ -51,11 +57,9 @@ public class CorsConfig {
      * If the attributes {@link CorsConfig#allowedOrigins}, {@link CorsConfig#allowedMethods},
      * {@link CorsConfig#allowedHeaders}, or {@link CorsConfig#allowCredentials} are not set,
      * default values will be applied, effectively allowing unrestricted CORS access.
-     * </p>
      * <p>
      * The returned {@link Customizer} is used to configure the {@link CorsConfigurer} as part of the security filter chain,
      * enabling fine-grained control over cross-origin request handling in the application.
-     * </p>
      *
      * @return a {@link Customizer} that applies CORS settings to HTTP security.
      */

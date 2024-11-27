@@ -23,7 +23,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * <p>
  * This exception extends {@link Exception} and provides a default message indicating
  * that the username already exists in the system.
- * </p>
  */
 @Schema(description = "Exception thrown when attempting to create a user with a username that already exists.")
 public class DuplicatedUserException extends Exception {

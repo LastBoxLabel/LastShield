@@ -40,11 +40,17 @@ import java.util.stream.Collectors;
  *     <li>Retrieve user roles and convert them to granted authorities for Spring Security.</li>
  *     <li>Handle class loading and reflection for user repository discovery and user entity interaction.</li>
  * </ul>
- * </p>
  */
 @Component
 public class SecurityUtil {
     private final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
+
+    /**
+     * Default constructor for the SecurityUtil class.
+     * This constructor is used to instantiate the SecurityUtil utility class.
+     */
+    public SecurityUtil() {
+    }
 
     /**
      * Retrieves the class of the user repository annotated with {@link UserHandler}.
@@ -54,7 +60,6 @@ public class SecurityUtil {
      * <p>
      * If advanced filtering is enabled (via {@link AdvancedFilterChecker}), it will scan the classpath for
      * the appropriate class and return it. If no such class is found, it throws an exception.
-     * </p>
      *
      * @return the user repository class annotated with {@link UserHandler}.
      * @throws RuntimeException if no user handler class is found or if an error occurs during class loading.

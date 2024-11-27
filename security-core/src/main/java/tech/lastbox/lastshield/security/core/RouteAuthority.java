@@ -27,7 +27,6 @@ import java.util.List;
  * A {@code RouteAuthority} defines the access control for a specific path, including the roles required to access it
  * and the HTTP methods (GET, POST, etc.) allowed on that path. This class is used to specify the security constraints
  * for each route in the application's security configuration.
- * </p>
  */
 public class RouteAuthority {
     private final String path;

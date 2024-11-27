@@ -23,7 +23,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * <p>
  * It extends {@link RuntimeException} and is used to indicate an issue with the configuration
  * of the Basic Authentication issuer.
- * </p>
  */
 @Schema(description = "Exception thrown when the issuer provided for Basic Authentication is invalid.")
 class InvalidIssuerException extends RuntimeException {

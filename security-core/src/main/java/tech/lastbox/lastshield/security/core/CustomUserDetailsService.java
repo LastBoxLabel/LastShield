@@ -36,7 +36,6 @@ import java.util.Optional;
  * This service uses Spring's {@link ApplicationContext} to retrieve the appropriate user repository based on the configuration
  * provided by {@link SecurityUtil}. The password is extracted from a field in the user entity class that is annotated with
  * {@link Password}.
- * </p>
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -71,7 +70,6 @@ public class CustomUserDetailsService implements UserDetailsService {
      * <p>
      * If the user is not found, a {@link RuntimeException} is thrown. If no field with the {@link Password} annotation
      * is found in the user entity, an {@link IllegalStateException} is thrown.
-     * </p>
      *
      * @param username the username of the user whose details are to be loaded.
      * @return a {@link UserDetails} object containing the user's username and password.

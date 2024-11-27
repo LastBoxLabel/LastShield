@@ -26,7 +26,6 @@ import java.util.List;
  * This utility class is used by {@link  CoreSecurityConfig} and {@link SecurityFilter} to manage route
  * authorizations. It allows checking whether a given path should be excluded from filtering
  * and provides a mechanism to add paths to a "do not filter" list.
- * </p>
  * @see CoreSecurityConfig
  * @see SecurityFilter
  */
@@ -58,7 +57,6 @@ class AdvancedFilterChecker {
      * <p>
      * This method checks if the given path starts with any of the paths in the
      * {@code shouldNotFilterPathList}.
-     * </p>
      *
      * @param pathToCompare the path to check.
      * @return {@code true} if the path matches any path in the shouldNotFilter list,
@@ -78,7 +76,6 @@ class AdvancedFilterChecker {
      * Adds a path to the list of paths that should not be filtered.
      * <p>
      * The path is normalized by removing any wildcard suffix "/**" before adding it to the list.
-     * </p>
      *
      * @param path the path to add to the list.
      */

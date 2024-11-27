@@ -43,7 +43,6 @@ import java.util.List;
  * <p>
  * This class is responsible for setting up the security filter chain, including the handling of custom
  * CORS configurations, CSRF protection settings, and adding custom authorities for route access.
- * </p>
  */
 @Configuration
 @ComponentScan
@@ -85,7 +84,6 @@ public class CoreSecurityConfig {
      * <p>
      * If the {@code build()} method was not previously called, an exception will be thrown. This method
      * sets up the security filter chain by adding the {@link SecurityFilter} and configuring paths and roles.
-     * </p>
      *
      * @param http the {@link HttpSecurity} object used to configure security settings.
      * @return the configured {@link SecurityFilterChain}.
@@ -200,7 +198,6 @@ public class CoreSecurityConfig {
      * If the advanced filter is not currently enabled ({@link AdvancedFilterChecker#isAdvancedFiltered()} returns {@code false}),
      * this method will enable it by calling {@link #setAdvancedFilter()} and configure the {@link SecurityFilter} with the appropriate
      * user repository class using {@link SecurityUtil#getUserRepositoryClass()}.
-     * </p>
      *
      * @param routeAuthority the {@link RouteAuthority} object representing the authority to be added.
      */

@@ -41,7 +41,6 @@ import java.util.Optional;
  * advanced filtering (as indicated by the {@link AdvancedFilterChecker}). If advanced filtering
  * is enabled, it processes the token, validates it using the {@link JwtService}, retrieves the
  * associated user from the repository, and sets the authenticated user in the {@link SecurityContextHolder}.
- * </p>
  */
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -60,7 +59,6 @@ public class SecurityFilter extends OncePerRequestFilter {
      *     <li>{@link ApplicationContext} for accessing Spring beans, such as the user repository.</li>
      *     <li>{@link SecurityUtil} for handling user lookups and authority retrieval.</li>
      * </ul>
-     * </p>
      *
      * @param jwtService the JWT service used to validate and decode tokens.
      * @param applicationContext the Spring application context to fetch the user repository bean.
@@ -87,14 +85,12 @@ public class SecurityFilter extends OncePerRequestFilter {
      * <p>
      * If the token is valid, it retrieves the associated user from the repository and sets
      * the user as the authenticated principal in the security context.
-     * </p>
      * <p>
      * If the token is missing or invalid, the filter sends an appropriate error response with the status:
      * <ul>
      *     <li>401 Unauthorized if the token is missing or invalid.</li>
      *     <li>403 Forbidden if the user cannot be found or the token is invalid.</li>
      * </ul>
-     * </p>
      *
      * @param request the HTTP request to be filtered.
      * @param response the HTTP response to be sent back to the client.
@@ -144,7 +140,6 @@ public class SecurityFilter extends OncePerRequestFilter {
      * Determines if this filter should be applied to the given HTTP request.
      * <p>
      * This method checks if the request path is in the list of paths that should not be filtered.
-     * </p>
      *
      * @param request the HTTP request.
      * @return {@code true} if the request should not be filtered; {@code false} otherwise.
@@ -164,7 +159,6 @@ public class SecurityFilter extends OncePerRequestFilter {
      * <p>
      * The token is expected to be prefixed with "Bearer ". This method strips off the "Bearer " prefix
      * and returns the token value.
-     * </p>
      *
      * @param request the HTTP request.
      * @return the JWT token if present, or {@code null} if the token is missing.

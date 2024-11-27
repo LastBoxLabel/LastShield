@@ -21,7 +21,6 @@ package tech.lastbox.lastshield.security.core;
  * <p>
  * It provides a default error message, "Empty token", indicating that a required token was not provided
  * or was empty during some operation, such as authentication or authorization.
- * </p>
  */
 public class EmptyTokenException extends RuntimeException {
     /**

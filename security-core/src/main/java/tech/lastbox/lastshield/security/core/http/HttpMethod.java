@@ -20,7 +20,7 @@ package tech.lastbox.lastshield.security.core.http;
  *
  * <p>This enum maps common HTTP methods used for interacting with web services.
  * Each method has a description that explains its purpose and usage. HTTP methods are used
- * to define the desired action when communicating with a server.</p>
+ * to define the desired action when communicating with a server.
  *
  * <ul>
  *     <li>{@link HttpMethod#GET} - Retrieve data from the server.</li>
@@ -36,14 +36,41 @@ package tech.lastbox.lastshield.security.core.http;
 
  */
 public enum HttpMethod {
+    /**
+     *  HTTP GET Method
+     **/
     GET("Retrieve data"),
+    /**
+     *  HTTP POST Method
+     **/
     POST("Submit data"),
+    /**
+     *  HTTP PUT Method
+     **/
     PUT("Update or replace data"),
+    /**
+     *  HTTP DELETE Method
+     **/
     DELETE("Remove data"),
+    /**
+     *  HTTP PATCH Method
+     **/
     PATCH("Partially update data"),
+    /**
+     *  HTTP HEAD Method
+     **/
     HEAD("Retrieve headers only"),
+    /**
+     *  HTTP OPTIONS Method
+     **/
     OPTIONS("Describe communication options"),
+    /**
+     *  HTTP TRACE Method
+     **/
     TRACE("Echo request for debugging"),
+    /**
+     *  HTTP CONNECT Method
+     **/
     CONNECT("Establish a tunnel");
 
     private final String description;

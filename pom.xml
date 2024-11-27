@@ -7,16 +7,21 @@
     <groupId>tech.lastbox.lastshield</groupId>
     <artifactId>LastShield</artifactId>
     <version>1.0.0</version>
+    <packaging>pom</packaging>
 
     <name>LastShield Framework</name>
     <description>Security Framework that gives security and practicality, letting focus on the real important part: Development</description>
     <url>https://github.com/LastBoxLabel/LastShieldDocs</url>
+
+    <!-- Licença -->
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
             <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
+
+    <!-- Desenvolvedores -->
     <developers>
         <developer>
             <id>aleschopf</id>
@@ -34,14 +39,15 @@
             <email>lsmoraes16.lm@gmail.com</email>
         </developer>
     </developers>
+
+    <!-- SCM -->
     <scm>
         <connection>https://github.com/LastBoxLabel/LastShieldDocs.git</connection>
         <developerConnection>scm:git:ssh://git@github.com:LastBoxLabel/LastShieldDocs.git</developerConnection>
         <url>https://github.com/LastBoxLabel/LastShieldDocs.git</url>
     </scm>
 
-    <packaging>pom</packaging>
-
+    <!-- Módulos -->
     <modules>
         <module>security-core</module>
         <module>security-jwt</module>
@@ -49,17 +55,7 @@
         <module>basic-auth</module>
     </modules>
 
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
+    <!-- Gerenciamento de dependências (deve ser herdado pelos módulos) -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -72,15 +68,18 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- Gerenciamento de propriedades -->
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- Build e plugins -->
     <build>
         <pluginManagement>
             <plugins>
+                <!-- Plugin de compilação -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -91,23 +90,75 @@
                     </configuration>
                 </plugin>
 
+                <!-- Plugin para testar -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.1.2</version>
                 </plugin>
 
+                <!-- Plugin para gerar fontes -->
                 <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.8</version>
-                    <extensions>true</extensions>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Plugin para gerar Javadocs -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Plugin para gerar checksums -->
+                <plugin>
+                    <groupId>net.ju-n.maven.plugins</groupId>
+                    <artifactId>checksum-maven-plugin</artifactId>
+                    <version>1.4</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>files</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                     <configuration>
-                        <serverId>ossrh</serverId>
-                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        <fileSets>
+                            <fileSet>
+                                <directory>${project.build.directory}</directory>
+                                <includes>
+                                    <include>${project.build.finalName}.jar</include>
+                                    <include>${project.build.finalName}-javadoc.jar</include>
+                                    <include>${project.build.finalName}-sources.jar</include>
+                                    <include>${project.build.finalName}.pom</include>
+                                </includes>
+                            </fileSet>
+                        </fileSets>
+                        <algorithms>
+                            <algorithm>MD5</algorithm>
+                            <algorithm>SHA-1</algorithm>
+                        </algorithms>
                     </configuration>
                 </plugin>
+
+                <!-- Plugin para assinar os artefatos -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -127,8 +178,32 @@
                         </gpgArguments>
                     </configuration>
                 </plugin>
+
+                <!-- Plugin para enviar ao Maven Central -->
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.6.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>ossrh</publishingServerId>
+                        <autoPublish>true</autoPublish>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
+    <!-- Gestão de distribuição -->
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

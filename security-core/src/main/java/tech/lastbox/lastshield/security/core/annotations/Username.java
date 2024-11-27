@@ -31,15 +31,15 @@ import java.lang.annotation.Target;
  * <p>When applied to a field, the {@code Username} annotation signifies
  * that the field holds the user's username, which may be used to locate the
  * user in the system, validate login credentials, or associate the user with
- * various security-related processes.</p>
+ * various security-related processes.
  *
  * <p>This annotation is primarily used by the {@link SecurityUtil} class
  * to reflectively identify the field that contains the username in the
  * user entity, ensuring that the correct information is used when
- * authenticating users or fetching user details from the system.</p>
+ * authenticating users or fetching user details from the system.
  *
  * <p>It is expected that the annotated field will hold a unique, user-specific
- * identifier, often required during login or user lookup in the system.</p>
+ * identifier, often required during login or user lookup in the system.
  *
  * @see SecurityUtil
  */

@@ -28,7 +28,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * and are conditionally enabled when the `lastshield.basicauth` property is set to `true`.
  * <p>
  * It validates the issuer and secret key properties and throws custom exceptions if they are null or empty.
- * </p>
  */
 @Component
 @ConfigurationProperties(prefix = "lastshield.basicauth")
@@ -67,7 +66,6 @@ public class BasicAuthProperties {
      * Sets the issuer for the token.
      * <p>
      * Throws an exception if the issuer is null or empty.
-     * </p>
      *
      * @param issuer the issuer of the token.
      * @throws InvalidIssuerException if the issuer is invalid.
@@ -95,7 +93,6 @@ public class BasicAuthProperties {
      * Sets the secret key for token signing and verification.
      * <p>
      * Throws an exception if the secret key is null or empty.
-     * </p>
      *
      * @param secretKey the secret key.
      * @throws InvalidSecretKeyException if the secret key is invalid.

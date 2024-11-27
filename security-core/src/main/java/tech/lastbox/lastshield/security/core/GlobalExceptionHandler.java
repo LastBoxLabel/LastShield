@@ -27,10 +27,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * a standardized error response to the client. When a {@link RuntimeException} is thrown, the handler constructs an
  * {@link ErrorResponse} with the exception message, the HTTP status code, and a timestamp, and then returns it
  * as part of a {@link ResponseEntity}.
- * </p>
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * Default constructor for the GlobalExceptionHandler class.
+     * This constructor is used to instantiate the GlobalExceptionHandler class.
+     */
+    public GlobalExceptionHandler() {
+    }
 
     /**
      * Handles {@link RuntimeException} by creating an {@link ErrorResponse} with the exception message and a

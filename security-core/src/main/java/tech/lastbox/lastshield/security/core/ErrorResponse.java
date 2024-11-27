@@ -20,7 +20,6 @@ package tech.lastbox.lastshield.security.core;
  * <p>
  * This class contains three key properties: a message describing the error, the HTTP status code associated with the error,
  * and a timestamp indicating when the error occurred.
- * </p>
  */
 public final class ErrorResponse {
     private final String message;

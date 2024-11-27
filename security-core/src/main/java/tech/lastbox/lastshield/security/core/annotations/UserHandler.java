@@ -32,15 +32,15 @@ import java.lang.annotation.Target;
  * <p>When applied to a class, this annotation indicates that the
  * associated class is responsible for handling user data, including
  * actions like fetching user information, authenticating users, or managing
- * user-related security operations.</p>
+ * user-related security operations.
  *
  * <p>This annotation is used by the {@link SecurityUtil} class to dynamically
  * locate and instantiate the appropriate user handler for operations related
- * to user authentication.</p>
+ * to user authentication.
  *
  * <p>The annotation can be applied to either a class (e.g., a user repository
  * or service), enabling flexible design patterns such as dependency injection
- * and component discovery in the context of security.</p>
+ * and component discovery in the context of security.
  *
  * @see SecurityUtil
  */

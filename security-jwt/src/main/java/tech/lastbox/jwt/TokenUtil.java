@@ -34,7 +34,6 @@ import static tech.lastbox.jwt.DateUtil.instantToLocalDateTime;
  * This class is primarily responsible for transforming data between JWT format and application
  * entities, as well as validating the authenticity of a token using the specified algorithm
  * and trusted issuers.
- * </p>
  */
 class TokenUtil {
     private static final Logger logger = LoggerFactory.getLogger(TokenUtil.class);
@@ -44,7 +43,6 @@ class TokenUtil {
      * <p>
      * This method extracts the necessary information from the decoded JWT (e.g., token string,
      * subject, issuer, expiration time, etc.) and maps it into a {@link Token} object.
-     * </p>
      *
      * @param decodedJWT The decoded JWT object.
      * @return A {@link Token} representation of the decoded JWT.
@@ -61,7 +59,6 @@ class TokenUtil {
      * <p>
      * This method maps the properties of the {@link TokenEntity} (such as token string, issued
      * at time, expiration time, subject, scope, and revocation status) into a {@link Token} object.
-     * </p>
      *
      * @param tokenEntity The {@link TokenEntity} object to be converted.
      * @return A {@link Token} object created from the {@link TokenEntity}.
@@ -79,7 +76,6 @@ class TokenUtil {
      * This method ensures that the token's issuer is in the list of trusted issuers and that the
      * token is properly signed using the provided algorithm. If valid, it returns an {@link Optional}
      * containing the corresponding {@link Token}. Otherwise, it returns an empty {@link Optional}.
-     * </p>
      *
      * @param algorithm The algorithm to be used for token verification.
      * @param trustedIssuers A set of trusted issuers to validate the token's issuer.

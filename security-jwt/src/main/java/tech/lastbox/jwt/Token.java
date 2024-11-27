@@ -13,7 +13,6 @@ import java.util.List;
  * This class is typically used for transferring JWT-related data
  * and is ideal for scenarios where immutable data structures are required.
  * It encapsulates the following fields:
- * </p>
  *
  * <ul>
  *     <li>{@code token}: The string representation of the token itself.</li>
@@ -29,7 +28,6 @@ import java.util.List;
  * This record is designed for use in scenarios where tokens are immutable, such as
  * when tokens are validated or stored for reference. The fields provided allow for
  * detailed tracking of token properties and status.
- * </p>
  */
 public record Token(
         String token,
