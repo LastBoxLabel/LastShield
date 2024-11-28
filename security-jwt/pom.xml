@@ -6,11 +6,11 @@
     <parent>
         <groupId>tech.lastbox.lastshield</groupId>
         <artifactId>LastShield</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>security-jwt</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>Security JWT</name>
@@ -130,10 +130,10 @@
                         <fileSet>
                             <directory>${project.build.directory}</directory>
                             <includes>
-                                <include>security-jwt-1.0.1.jar</include>
-                                <include>security-jwt-1.0.1-javadoc.jar</include>
-                                <include>security-jwt-1.0.1-sources.jar</include>
-                                <include>security-jwt-1.0.1.pom</include>
+                                <include>security-jwt-1.0.2.jar</include>
+                                <include>security-jwt-1.0.2-javadoc.jar</include>
+                                <include>security-jwt-1.0.2-sources.jar</include>
+                                <include>security-jwt-1.0.2.pom</include>
                             </includes>
                         </fileSet>
                     </fileSets>

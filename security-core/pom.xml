@@ -6,11 +6,11 @@
     <parent>
         <groupId>tech.lastbox.lastshield</groupId>
         <artifactId>LastShield</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </parent>
 
     <artifactId>security-core</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>LastShield Security Core</name>
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>tech.lastbox.lastshield</groupId>
             <artifactId>security-jwt</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

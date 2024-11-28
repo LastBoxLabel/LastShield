@@ -121,7 +121,6 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                     Object userEntity = userEntityOptional.get();
                     var authorities = securityUtil.getUserAuthorities(userEntity);
-                    System.out.println(authorities);
                     var authentication = new UsernamePasswordAuthenticationToken(userEntity, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
