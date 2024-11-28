@@ -167,7 +167,7 @@ public class JwtConfig {
      */
     private HashSet<String> generateTrustedIssuers(List<String> issuers) {
         HashSet<String> trustedIssuers = new HashSet<>(DEFAULT_ISSUERS);
-        issuers.stream().map(String::toLowerCase).forEach(trustedIssuers::add);
+        trustedIssuers.addAll(issuers);
         return trustedIssuers;
     }
 
@@ -180,7 +180,7 @@ public class JwtConfig {
      */
     private HashSet<String> generateTrustedIssuers(String issuer) {
         HashSet<String> trustedIssuers = new HashSet<>(DEFAULT_ISSUERS);
-        trustedIssuers.add(issuer.toLowerCase());
+        trustedIssuers.add(issuer);
         return trustedIssuers;
     }
 
