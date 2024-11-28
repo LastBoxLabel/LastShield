@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>basic-auth</artifactId>
+    <version>1.0.3</version>
     <name>LastShield Basic Auth</name>
     <description>Basic Auth module for the LastShield Security Framework</description>
     <url>https://github.com/LastBoxLabel/LastShieldDocs</url>

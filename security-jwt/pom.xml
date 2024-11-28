@@ -130,10 +130,10 @@
                         <fileSet>
                             <directory>${project.build.directory}</directory>
                             <includes>
-                                <include>security-jwt-1.0.2.jar</include>
-                                <include>security-jwt-1.0.2-javadoc.jar</include>
-                                <include>security-jwt-1.0.2-sources.jar</include>
-                                <include>security-jwt-1.0.2.pom</include>
+                                <include>${project.build.finalName}.jar</include>
+                                <include>${project.build.finalName}-javadoc.jar</include>
+                                <include>${project.build.finalName}-sources.jar</include>
+                                <include>${project.build.finalName}.pom</include>
                             </includes>
                         </fileSet>
                     </fileSets>

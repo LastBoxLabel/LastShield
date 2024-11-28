@@ -96,7 +96,6 @@ public class SecurityUtil {
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             if (field.isAnnotationPresent(Username.class)) {
-                System.out.println(field.getName());
                 usernameFields.add(field.getName());
             }
         }
@@ -179,10 +178,8 @@ public class SecurityUtil {
     public Object findUserByUsername(Object userService,  String username) {
         try {
             for (String field : usernameFields) {
-                System.out.println(field);
                 try {
                     String fieldToSearch = String.format("findUserBy%s", capitalizeFirstLetter(field));
-                    System.out.println(fieldToSearch);
                     Method method = userService.getClass().getDeclaredMethod(fieldToSearch, String.class);
                     method.setAccessible(true);
                     return method.invoke(userService, username);
