@@ -64,26 +64,38 @@ public class CorsConfig {
      * @return a {@link Customizer} that applies CORS settings to HTTP security.
      */
     @Bean
-    public Customizer<CorsConfigurer<HttpSecurity>> configure(){
-        return cors -> corsConfigurationSource();
+    public Customizer<CorsConfigurer<HttpSecurity>> configure() {
+        return cors -> cors.configurationSource(corsConfigurationSource());
     }
 
-    private void corsConfigurationSource() {
-        logger.info("✅ CORS Configuration Initialized");
+    private UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        this.logger.info("✅ CORS Configuration Initialized");
         CorsConfiguration configuration = new CorsConfiguration();
 
-        if(allowedOrigins == null) configuration.setAllowedOrigins(List.of("*"));
-        if(allowedMethods == null) configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        if(allowedHeaders == null) configuration.setAllowedHeaders(List.of("*"));
-        if(allowCredentials == null) configuration.setAllowCredentials(true);
+        if (this.allowedOrigins == null || this.allowedOrigins.isEmpty()) {
+            configuration.setAllowedOrigins(List.of("*")); // Cuidado ao usar '*'
+        } else {
+            configuration.setAllowedOrigins(this.allowedOrigins);
+        }
 
-        configuration.setAllowedOrigins(allowedOrigins);
-        configuration.setAllowedMethods(allowedMethods);
-        configuration.setAllowCredentials(allowCredentials);
-        configuration.addAllowedHeader("*");
+        if (this.allowedMethods == null || this.allowedMethods.isEmpty()) {
+            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        } else {
+            configuration.setAllowedMethods(this.allowedMethods);
+        }
+
+        if (this.allowedHeaders == null || this.allowedHeaders.isEmpty()) {
+            configuration.setAllowedHeaders(List.of("*"));
+        } else {
+            configuration.setAllowedHeaders(this.allowedHeaders);
+        }
+
+        configuration.setAllowCredentials(this.allowCredentials != null && this.allowCredentials);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 
     /**

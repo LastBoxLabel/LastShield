@@ -6,11 +6,11 @@
     <parent>
         <groupId>tech.lastbox.lastshield</groupId>
         <artifactId>LastShield</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>security-jwt</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
 
     <name>Security JWT</name>

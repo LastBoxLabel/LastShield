@@ -6,11 +6,11 @@
     <parent>
         <groupId>tech.lastbox.lastshield</groupId>
         <artifactId>LastShield</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
     </parent>
 
     <artifactId>basic-auth</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <name>LastShield Basic Auth</name>
     <description>Basic Auth module for the LastShield Security Framework</description>
     <url>https://github.com/LastBoxLabel/LastShieldDocs</url>
@@ -65,19 +65,19 @@
         <dependency>
             <groupId>tech.lastbox.lastshield</groupId>
             <artifactId>security-jwt</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>tech.lastbox.lastshield</groupId>
             <artifactId>security-core</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>tech.lastbox.lastshield</groupId>
             <artifactId>security-config</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
